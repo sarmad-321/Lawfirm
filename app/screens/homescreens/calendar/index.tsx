@@ -6,7 +6,7 @@ import CalendarScreenContent from './CalendarContent';
 const Calendar = () => {
   return (
     <View style={styles.container}>
-      <HeaderV2 />
+      <HeaderV2 title="Calendar" />
       <CalendarScreenContent />
     </View>
   );

@@ -9,11 +9,55 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import { borderRadius, colors, fontSize, spacing } from '../../../utils/theme';
 
+interface Event {
+  id: string;
+  title: string;
+  subtitle: string;
+  time: string;
+  type: 'event' | 'task';
+  userInitials?: string;
+  backgroundColor?: string;
+}
+
+interface DaySchedule {
+  date: Date;
+  dayName: string;
+  dayNumber: number;
+  month: string;
+  events: Event[];
+}
+
 const CalendarScreenContent = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  //   const [currentMonth, setCurrentMonth] = useState(new Date());
   const horizontalCalendarRef = useRef(null);
   const verticalScrollRef = useRef(null);
+
+  // Sample events data
+  const sampleEvents: { [key: string]: Event[] } = {
+    'Mon Aug 11': [
+      {
+        id: '1',
+        title: '00001-Mubasshir',
+        subtitle: 'Tareekh pe tareekh',
+        time: '4:30-5 PM',
+        type: 'event',
+        userInitials: 'AM',
+        backgroundColor: colors.secondary,
+      },
+    ],
+    'Mon Aug 18': [
+      {
+        id: '1',
+        title: '00001-Mubasshir',
+        subtitle: 'Testing event',
+        time: '4:30-5 PM',
+        type: 'event',
+        userInitials: 'AM',
+        backgroundColor: colors.secondary,
+      },
+    ],
+    // You can add more events for other dates here
+  };
 
   // Generate dates for horizontal calendar (30 days from today)
   const generateHorizontalDates = () => {
@@ -28,18 +72,22 @@ const CalendarScreenContent = () => {
     return dates;
   };
 
-  // Generate daily schedule data
+  // Generate daily schedule data with events
   const generateScheduleData = () => {
-    const scheduleData = [];
+    const scheduleData: DaySchedule[] = [];
     const horizontalDates = generateHorizontalDates();
 
     horizontalDates.forEach(date => {
+      const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+      const month = date.toLocaleDateString('en-US', { month: 'short' });
+      const dayKey = `${dayName} ${month} ${date.getDate()}`;
+
       scheduleData.push({
         date: date,
-        dayName: date.toLocaleDateString('en-US', { weekday: 'short' }),
+        dayName: dayName,
         dayNumber: date.getDate(),
-        month: date.toLocaleDateString('en-US', { month: 'short' }),
-        events: [], // No events for now
+        month: month,
+        events: sampleEvents[dayKey] || [],
       });
     });
 
@@ -49,7 +97,7 @@ const CalendarScreenContent = () => {
   const [horizontalDates] = useState(generateHorizontalDates());
   const [scheduleData] = useState(generateScheduleData());
 
-  const formatDate = date => {
+  const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', {
       weekday: 'short',
       month: 'short',
@@ -57,16 +105,16 @@ const CalendarScreenContent = () => {
     });
   };
 
-  const isToday = date => {
+  const isToday = (date: Date) => {
     const today = new Date();
     return date.toDateString() === today.toDateString();
   };
 
-  const isSameDate = (date1, date2) => {
+  const isSameDate = (date1: Date, date2: Date) => {
     return date1.toDateString() === date2.toDateString();
   };
 
-  const handleDatePress = (date, index) => {
+  const handleDatePress = (date: Date, index: number) => {
     setSelectedDate(date);
 
     // Scroll horizontal calendar to selected date
@@ -92,7 +140,7 @@ const CalendarScreenContent = () => {
     }
   };
 
-  const handleVerticalScroll = event => {
+  const handleVerticalScroll = (event: any) => {
     const scrollY = event.nativeEvent.contentOffset.y;
     const itemHeight = 120; // Approximate height of each day item
     const currentIndex = Math.floor(scrollY / itemHeight);
@@ -118,7 +166,13 @@ const CalendarScreenContent = () => {
     }
   };
 
-  const renderHorizontalDateItem = ({ item: date, index }) => {
+  const renderHorizontalDateItem = ({
+    item: date,
+    index,
+  }: {
+    item: Date;
+    index: number;
+  }) => {
     const isSelected = isSameDate(date, selectedDate);
     const isTodayDate = isToday(date);
 
@@ -153,7 +207,29 @@ const CalendarScreenContent = () => {
     );
   };
 
-  const renderScheduleItem = ({ item }) => {
+  const renderEventItem = ({ item }: { item: Event }) => (
+    <TouchableOpacity style={styles.eventItem} activeOpacity={0.7}>
+      <View style={styles.eventContent}>
+        {item.userInitials && (
+          <View
+            style={[
+              styles.userAvatar,
+              { backgroundColor: item.backgroundColor },
+            ]}
+          >
+            <Text style={styles.userInitials}>{item.userInitials}</Text>
+          </View>
+        )}
+        <View style={styles.eventTextContainer}>
+          <Text style={styles.eventTitle}>{item.title}</Text>
+          <Text style={styles.eventSubtitle}>{item.subtitle}</Text>
+        </View>
+        <Text style={styles.eventTime}>{item.time}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+
+  const renderScheduleItem = ({ item }: { item: DaySchedule }) => {
     const isSelected = isSameDate(item.date, selectedDate);
     const isTodayDate = isToday(item.date);
 
@@ -173,14 +249,23 @@ const CalendarScreenContent = () => {
           </Text>
         </View>
 
-        <View style={styles.noEventsContainer}>
-          <Icon
-            name="calendar-outline"
-            size={24}
-            color={colors.textSecondary}
+        {item.events.length > 0 ? (
+          <FlatList
+            data={item.events}
+            renderItem={renderEventItem}
+            keyExtractor={event => event.id}
+            scrollEnabled={false}
           />
-          <Text style={styles.noEventsText}>No events scheduled</Text>
-        </View>
+        ) : (
+          <View style={styles.noEventsContainer}>
+            <Icon
+              name="calendar-outline"
+              size={24}
+              color={colors.textSecondary}
+            />
+            <Text style={styles.noEventsText}>No events scheduled</Text>
+          </View>
+        )}
       </View>
     );
   };
@@ -310,6 +395,46 @@ const styles = StyleSheet.create({
   },
   todayScheduleDate: {
     color: colors.primary,
+  },
+  eventItem: {
+    marginBottom: spacing.sm,
+  },
+  eventContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.surfaceLight,
+    borderRadius: borderRadius.md,
+    padding: spacing.md,
+  },
+  userAvatar: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: spacing.md,
+  },
+  userInitials: {
+    color: colors.white,
+    fontSize: fontSize.sm,
+    fontWeight: '600',
+  },
+  eventTextContainer: {
+    flex: 1,
+  },
+  eventTitle: {
+    color: colors.textPrimary,
+    fontSize: fontSize.md,
+    fontWeight: '600',
+    marginBottom: 2,
+  },
+  eventSubtitle: {
+    color: colors.textSecondary,
+    fontSize: fontSize.sm,
+  },
+  eventTime: {
+    color: colors.textSecondary,
+    fontSize: fontSize.sm,
   },
   noEventsContainer: {
     flexDirection: 'row',

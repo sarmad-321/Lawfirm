@@ -11,23 +11,17 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { colors, fontSize, spacing } from '../../utils/theme';
 
 interface HeaderProps {
-  onSettingsPress?: () => void;
-  onNotificationPress?: () => void;
-  onMessagePress?: () => void;
+  title: string;
 }
 
-const HeaderV2: React.FC<HeaderProps> = ({
-  onSettingsPress,
-  onNotificationPress,
-  onMessagePress,
-}) => {
+const HeaderV2: React.FC<HeaderProps> = ({ title }) => {
   const insets = useSafeAreaInsets();
 
   return (
     <>
       <StatusBar barStyle="light-content" backgroundColor={colors.primary} />
       <View style={[styles.header, { paddingTop: insets.top + spacing.md }]}>
-        <Text style={styles.screenTitle}>Activities</Text>
+        <Text style={styles.screenTitle}>{title}</Text>
 
         <View style={styles.headerIcons}>
           <TouchableOpacity

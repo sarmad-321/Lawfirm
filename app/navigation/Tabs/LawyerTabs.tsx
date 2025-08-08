@@ -10,8 +10,20 @@ import HomeScreen from '../../screens/homescreens/home';
 import SearchScreen from '../../screens/homescreens/search';
 import TaskScreen from '../../screens/homescreens/tasks';
 import { colors, fontSize, spacing } from '../../utils/theme';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import MatterDetail from '../../screens/homescreens/home/MatterDetail';
 
 const Tab = createBottomTabNavigator();
+const HomeStack = createNativeStackNavigator();
+
+const HomeStackScreen = () => {
+  return (
+    <HomeStack.Navigator screenOptions={{ headerShown: false }}>
+      <HomeStack.Screen name="HomeScreen" component={HomeScreen} />
+      <HomeStack.Screen name="MatterDetail" component={MatterDetail} />
+    </HomeStack.Navigator>
+  );
+};
 
 interface TabBarProps {
   state: any;
@@ -107,7 +119,7 @@ export default function LawyerTabs() {
     >
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={HomeStackScreen}
         options={{
           tabBarLabel: 'Home',
         }}

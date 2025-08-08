@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   FlatList,
   SafeAreaView,
@@ -7,6 +8,9 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Animated,
+  PanResponder,
+  Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {
@@ -17,6 +21,11 @@ import {
   spacing,
 } from '../../../utils/theme';
 import HeaderV2 from '../../../components/headerv2';
+import { useFocusEffect } from '@react-navigation/native';
+
+const { width: screenWidth } = Dimensions.get('window');
+const SWIPE_THRESHOLD = 80;
+const ACTION_WIDTH = 90;
 
 interface TimeEntry {
   id: string;
@@ -35,19 +44,203 @@ interface DailyTotal {
   entries: TimeEntry[];
 }
 
+const SwipeableCard = ({
+  item,
+  onEdit,
+  onDuplicate,
+  onDelete,
+  onStart,
+  shouldShowDemo,
+  onDemoComplete,
+  index,
+}) => {
+  const [pan] = useState(new Animated.Value(0));
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    console.log(shouldShowDemo, index, 'card details');
+    if (shouldShowDemo && index === 0) {
+      // Show demo swipe animation
+      console.log('are we here ?');
+      setTimeout(() => {
+        Animated.sequence([
+          Animated.timing(pan, {
+            toValue: -ACTION_WIDTH * 2, // Swipe right to show actions
+            duration: 800,
+            useNativeDriver: false,
+          }),
+          Animated.timing(pan, {
+            toValue: 0, // Return to original position
+            duration: 600,
+            useNativeDriver: false,
+          }),
+        ]).start(() => {
+          if (onDemoComplete) {
+            onDemoComplete();
+          }
+        });
+      }, 1000); // Wait 1 second after screen loads
+    }
+  }, [shouldShowDemo]);
+
+  const panResponder = PanResponder.create({
+    onMoveShouldSetPanResponder: (evt, gestureState) => {
+      return Math.abs(gestureState.dx) > 10 && Math.abs(gestureState.dy) < 50;
+    },
+    onPanResponderGrant: () => {
+      pan.setOffset(pan._value);
+    },
+    onPanResponderMove: (evt, gestureState) => {
+      const maxSwipe = -ACTION_WIDTH * 3; // 3 actions
+      const clampedDx = Math.max(maxSwipe, Math.min(0, gestureState.dx));
+      pan.setValue(clampedDx);
+    },
+    onPanResponderRelease: (evt, gestureState) => {
+      pan.flattenOffset();
+
+      if (gestureState.dx < -SWIPE_THRESHOLD) {
+        // Open swipe actions
+        Animated.spring(pan, {
+          toValue: -ACTION_WIDTH * 1.9,
+          useNativeDriver: false,
+        }).start();
+        setIsOpen(true);
+      } else {
+        // Close swipe actions
+        Animated.spring(pan, {
+          toValue: 0,
+          useNativeDriver: false,
+        }).start();
+        setIsOpen(false);
+      }
+    },
+  });
+
+  const closeSwipe = () => {
+    Animated.spring(pan, {
+      toValue: 0,
+      useNativeDriver: false,
+    }).start();
+    setIsOpen(false);
+  };
+
+  const handleAction = action => {
+    closeSwipe();
+    setTimeout(() => {
+      action();
+    }, 200);
+  };
+
+  return (
+    <View style={styles.swipeContainer}>
+      {/* Action Buttons (Behind the card) */}
+      <View style={styles.actionContainer}>
+        <TouchableOpacity
+          style={[styles.actionButton, styles.duplicateButton]}
+          onPress={() => handleAction(() => onDuplicate(item))}
+          activeOpacity={0.8}
+        >
+          <Text style={{ color: 'white' }}>Duplicate</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.actionButton, styles.deleteButton]}
+          onPress={() => handleAction(() => onDelete(item))}
+          activeOpacity={0.8}
+        >
+          <Text style={{ color: 'white' }}>Start</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Main Card */}
+      <Animated.View
+        style={[
+          styles.entryCard,
+          {
+            transform: [{ translateX: pan }],
+          },
+        ]}
+        {...panResponder.panHandlers}
+      >
+        <TouchableOpacity onPress={closeSwipe} activeOpacity={1}>
+          <View style={styles.entryHeader}>
+            <View style={styles.initialsContainer}>
+              <Text style={styles.initialsText}>{item.initials}</Text>
+            </View>
+            <View style={styles.entryContent}>
+              <Text style={styles.matterText}>{item.matter}</Text>
+              <Text style={styles.descriptionText}>{item.description}</Text>
+              {item.amount !== '£0.00' && (
+                <View style={styles.draftBadge}>
+                  <Text style={styles.draftText}>Draft</Text>
+                </View>
+              )}
+            </View>
+            <View style={styles.entryRight}>
+              <Text style={styles.durationText}>{item.duration}</Text>
+              {item.amount !== '£0.00' && (
+                <Text style={styles.amountText}>{item.amount}</Text>
+              )}
+            </View>
+          </View>
+
+          {/* Action Buttons for entries that can be started */}
+          {item.amount === '£0.00' && (
+            <View style={styles.cardActions}>
+              <TouchableOpacity
+                style={styles.startButton}
+                onPress={() => onStart(item)}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.startButtonText}>Start</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.duplicateActionButton}
+                onPress={() => onDuplicate(item)}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.duplicateActionText}>Duplicate</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </TouchableOpacity>
+      </Animated.View>
+    </View>
+  );
+};
+
 const Activities: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'time' | 'expenses'>('time');
+  const [demoShown, setDemoShown] = useState(false);
 
-  // Sample data - replace with your actual data
+  // Enhanced sample data
   const dailyTotals: DailyTotal[] = [
     {
-      date: 'Aug 4, 2025 - Aug 4, 2025',
-      totalAmount: '£0.00',
-      totalDuration: '00:00:36',
+      date: 'Aug 4, 2025 - Aug 5, 2025',
+      totalAmount: '£14.40',
+      totalDuration: '01:13:48',
       entries: [
         {
           id: '1',
-          date: 'Today, Aug 4',
+          date: 'Today, Aug 5',
+          description: 'mubashir',
+          duration: '01:12:47',
+          amount: '£14.40',
+          matter: '00001-mubashir',
+          initials: 'SS',
+        },
+        {
+          id: '2',
+          date: 'Today, Aug 5',
+          description: 'No activity description',
+          duration: '00:00:47',
+          amount: '£0.00',
+          matter: 'No matter selected',
+          initials: 'SS',
+        },
+        {
+          id: '3',
+          date: 'Mon, Aug 4',
           description: 'No activity description',
           duration: '00:00:02',
           amount: '£0.00',
@@ -58,43 +251,56 @@ const Activities: React.FC = () => {
     },
   ];
 
-  const handleSettingsPress = () => {
-    console.log('Settings pressed');
+  const handleEdit = (item: TimeEntry) => {
+    console.log('Edit:', item.id);
   };
 
-  const handleNotificationPress = () => {
-    console.log('Notification pressed');
+  const handleDuplicate = (item: TimeEntry) => {
+    console.log('Duplicate:', item.id);
   };
 
-  const handleMessagePress = () => {
-    console.log('Message pressed');
+  const handleDelete = (item: TimeEntry) => {
+    console.log('Delete:', item.id);
+  };
+
+  const handleStart = (item: TimeEntry) => {
+    console.log('Start:', item.id);
   };
 
   const handleAddPress = () => {
     console.log('Add activity pressed');
   };
 
-  const handleFilterPress = () => {
-    console.log('Filter pressed');
+  const handleDemoComplete = () => {
+    setDemoShown(true);
   };
 
-  const handleMenuPress = () => {
-    console.log('Menu pressed');
-  };
+  useFocusEffect(
+    useCallback(() => {
+      setDemoShown(false);
+      return () => {
+        console.log('User navigated away from this tab');
+      };
+    }, []),
+  );
 
-  const renderTimeEntry = ({ item }: { item: TimeEntry }) => (
-    <View style={styles.entryCard}>
-      <View style={styles.entryHeader}>
-        <View style={styles.initialsContainer}>
-          <Text style={styles.initialsText}>{item.initials}</Text>
-        </View>
-        <View style={styles.entryContent}>
-          <Text style={styles.matterText}>{item.matter}</Text>
-          <Text style={styles.descriptionText}>{item.description}</Text>
-        </View>
-        <Text style={styles.durationText}>{item.duration}</Text>
-      </View>
-    </View>
+  const renderTimeEntry = ({
+    item,
+    index,
+  }: {
+    item: TimeEntry;
+    index: Number;
+  }) => (
+    <SwipeableCard
+      item={item}
+      index={index}
+      onEdit={handleEdit}
+      onDuplicate={handleDuplicate}
+      onDelete={handleDelete}
+      onStart={handleStart}
+      shouldShowDemo={!demoShown} // Show demo on first card only
+      onDemoComplete={handleDemoComplete}
+    />
   );
 
   const renderDailySection = ({ item }: { item: DailyTotal }) => (
@@ -107,30 +313,19 @@ const Activities: React.FC = () => {
         </View>
       </View>
 
-      <View style={styles.dayHeader}>
-        <Text style={styles.dayTitle}>Today, Aug 4</Text>
-        <View style={styles.dayTotals}>
-          <Text style={styles.dayAmount}>£0.00</Text>
-          <Text style={styles.dayDuration}>00:00:02</Text>
-        </View>
-      </View>
-
       <FlatList
         data={item.entries}
         renderItem={renderTimeEntry}
         keyExtractor={entry => entry.id}
         scrollEnabled={false}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );
 
   return (
     <SafeAreaView style={styles.container}>
-      <HeaderV2
-        onSettingsPress={handleSettingsPress}
-        onNotificationPress={handleNotificationPress}
-        onMessagePress={handleMessagePress}
-      />
+      <HeaderV2 title="Activities" />
 
       {/* Tab Navigation */}
       <View style={styles.tabContainer}>
@@ -188,11 +383,11 @@ const Activities: React.FC = () => {
               <Text style={styles.totalBillableTitle}>Total billable</Text>
               <View style={styles.totalBillableRow}>
                 <Text style={styles.totalBillableDate}>
-                  Aug 4, 2025 - Aug 4, 2025
+                  Aug 4, 2025 - Aug 5, 2025
                 </Text>
                 <View style={styles.totalBillableValues}>
-                  <Text style={styles.totalBillableAmount}>£0.00</Text>
-                  <Text style={styles.totalBillableDuration}>00:00:36</Text>
+                  <Text style={styles.totalBillableAmount}>£14.40</Text>
+                  <Text style={styles.totalBillableDuration}>01:13:48</Text>
                 </View>
               </View>
             </View>
@@ -228,15 +423,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-  activitiesHeader: {
-    backgroundColor: colors.primary,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.md,
-  },
-
   tabContainer: {
     flexDirection: 'row',
     backgroundColor: colors.primary,
@@ -334,39 +520,49 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     fontSize: fontSize.sm,
   },
-  dayHeader: {
+
+  // Swipeable Card Styles
+  swipeContainer: {
+    marginVertical: spacing.sm,
+    overflow: 'visible',
+  },
+  actionContainer: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    bottom: 0,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: spacing.md,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.gray700,
+    zIndex: 0,
   },
-  dayTitle: {
-    color: colors.textPrimary,
-    fontSize: fontSize.lg,
+  actionButton: {
+    width: ACTION_WIDTH,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  dayTotals: {
-    alignItems: 'flex-end',
+  editButton: {
+    backgroundColor: colors.primaryDark,
   },
-  dayAmount: {
-    color: colors.textPrimary,
-    fontSize: fontSize.md,
-    fontWeight: '600',
+  duplicateButton: {
+    backgroundColor: colors.gray600,
   },
-  dayDuration: {
-    color: colors.textSecondary,
-    fontSize: fontSize.sm,
+  deleteButton: {
+    backgroundColor: '#007AFF',
+    borderTopRightRadius: borderRadius.lg,
+    borderBottomRightRadius: borderRadius.lg,
   },
+
   entryCard: {
     backgroundColor: colors.surfaceLight,
     borderRadius: borderRadius.lg,
     padding: spacing.lg,
-    marginVertical: spacing.sm,
+    zIndex: 1,
+    overflow: 'hidden',
   },
   entryHeader: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   initialsContainer: {
     width: 40,
@@ -393,11 +589,64 @@ const styles = StyleSheet.create({
   descriptionText: {
     color: colors.textPrimary,
     fontSize: fontSize.md,
+    marginBottom: spacing.xs,
+  },
+  draftBadge: {
+    alignSelf: 'flex-start',
+    backgroundColor: colors.error || '#FF3B30',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs / 2,
+    borderRadius: borderRadius.sm,
+  },
+  draftText: {
+    color: colors.white,
+    fontSize: fontSize.xs,
+    fontWeight: '600',
+  },
+  entryRight: {
+    alignItems: 'flex-end',
   },
   durationText: {
     color: colors.textSecondary,
     fontSize: fontSize.sm,
   },
+  amountText: {
+    color: colors.textPrimary,
+    fontSize: fontSize.md,
+    fontWeight: '600',
+    marginTop: spacing.xs,
+  },
+
+  // Card Actions
+  cardActions: {
+    flexDirection: 'row',
+    marginTop: spacing.md,
+    gap: spacing.sm,
+  },
+  startButton: {
+    backgroundColor: colors.primary,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+    borderRadius: borderRadius.md,
+  },
+  startButtonText: {
+    color: colors.white,
+    fontSize: fontSize.sm,
+    fontWeight: '600',
+  },
+  duplicateActionButton: {
+    borderColor: colors.textSecondary,
+    borderWidth: 1,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+    borderRadius: borderRadius.md,
+  },
+  duplicateActionText: {
+    color: colors.textSecondary,
+    fontSize: fontSize.sm,
+    fontWeight: '600',
+  },
+
   emptyState: {
     flex: 1,
     justifyContent: 'center',

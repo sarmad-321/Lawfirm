@@ -5,6 +5,8 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ScrollView,
+  TextInput,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Header from '../../../components/header';
@@ -16,8 +18,56 @@ import {
   spacing,
 } from '../../../utils/theme';
 
-const HomeScreen: React.FC = () => {
+interface Matter {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  author?: string;
+}
+
+interface Contact {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+}
+
+const HomeScreen: React.FC = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState<'matters' | 'contacts'>('matters');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [hasData, setHasData] = useState(false);
+  // Sample data - replace with your actual data
+  const [matters] = useState<Matter[]>([
+    {
+      id: '00001-Mubasshir',
+      title: 'Phadda hogya hay salary hike naa den...',
+      description: '',
+      date: 'Today',
+    },
+    {
+      id: '00001-Mubasshir',
+      title: 'Phadda hogya hay salary hike naa dene pe',
+      description: '',
+      date: '',
+      author: 'Atta Rahi Mubasshir',
+    },
+    {
+      id: '00002-Rizwan',
+      title: 'Will be fired from job',
+      description: 'Case of murder of a collegue',
+      date: '12/3/2002',
+      author: 'sarmad shakeel',
+    },
+  ]);
+
+  const [contacts] = useState<Contact[]>([
+    {
+      id: '1',
+      name: 'Atta Rahi Mubasshir',
+      email: 'attaRabi@gmail.com',
+    },
+  ]);
 
   const handleSettingsPress = () => {
     console.log('Settings pressed');
@@ -32,8 +82,43 @@ const HomeScreen: React.FC = () => {
   };
 
   const handleAddPress = () => {
+    // setHasData(true);
     console.log('Add button pressed');
   };
+
+  const handleFilterMatters = () => {
+    console.log('Filter matters pressed');
+  };
+
+  const renderMatterItem = (matter: Matter) => (
+    <TouchableOpacity
+      key={`${matter.id}-${matter.title}`}
+      style={styles.matterItem}
+      onPress={() => navigation.navigate('MatterDetail', { matter: matter })} // Assuming you have a navigation setup
+    >
+      <Text style={styles.matterTitle}>{matter.title}</Text>
+      {matter.description && (
+        <Text style={styles.matterDescription}>{matter.description}</Text>
+      )}
+      {matter.date && <Text style={styles.matterDate}>{matter.date}</Text>}
+      {matter.author && (
+        <View style={styles.authorContainer}>
+          <Icon name="person-outline" size={12} color={colors.textSecondary} />
+          <Text style={styles.authorText}>{matter.author}</Text>
+        </View>
+      )}
+    </TouchableOpacity>
+  );
+
+  const renderContactItem = (contact: Contact) => (
+    <TouchableOpacity key={contact.id} style={styles.contactItem}>
+      <Text style={styles.contactName}>{contact.name}</Text>
+      <Text style={styles.contactEmail}>{contact.email}</Text>
+      {contact.phone && (
+        <Text style={styles.contactPhone}>{contact.phone}</Text>
+      )}
+    </TouchableOpacity>
+  );
 
   const renderEmptyState = () => (
     <View style={styles.emptyStateContainer}>
@@ -50,6 +135,82 @@ const HomeScreen: React.FC = () => {
       </Text>
     </View>
   );
+
+  const renderMattersContent = () => {
+    const recentlyViewed = matters.filter(matter => matter.date === 'Today');
+    const recentlyEdited = matters.filter(matter => matter.author);
+
+    return (
+      <ScrollView style={styles.scrollContainer}>
+        {/* Search Bar */}
+        <View style={styles.searchContainer}>
+          <Icon
+            name="search-outline"
+            size={20}
+            color={colors.textSecondary}
+            style={styles.searchIcon}
+          />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search all matters..."
+            placeholderTextColor={colors.textSecondary}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+        </View>
+
+        {/* Recently Viewed Section */}
+        {recentlyViewed.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Recently viewed</Text>
+            {recentlyViewed.map(matter => renderMatterItem(matter))}
+          </View>
+        )}
+
+        {/* Recently Edited Section */}
+        {recentlyEdited.length > 0 && (
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>All Matters</Text>
+              <TouchableOpacity onPress={handleFilterMatters}>
+                <Text style={styles.filterLink}>Filter matters</Text>
+              </TouchableOpacity>
+            </View>
+            {recentlyEdited.map(matter => renderMatterItem(matter))}
+          </View>
+        )}
+      </ScrollView>
+    );
+  };
+
+  const renderContactsContent = () => {
+    return (
+      <ScrollView style={styles.scrollContainer}>
+        {/* Search Bar */}
+        <View style={styles.searchContainer}>
+          <Icon
+            name="search-outline"
+            size={20}
+            color={colors.textSecondary}
+            style={styles.searchIcon}
+          />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search all contacts..."
+            placeholderTextColor={colors.textSecondary}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+        </View>
+
+        {hasData ? (
+          contacts.map(renderContactItem)
+        ) : (
+          <View style={styles.emptyContentContainer}>{renderEmptyState()}</View>
+        )}
+      </ScrollView>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -109,7 +270,13 @@ const HomeScreen: React.FC = () => {
       </View>
 
       {/* Content Area */}
-      <View style={styles.contentContainer}>{renderEmptyState()}</View>
+      <View style={styles.contentContainer}>
+        {hasData
+          ? activeTab === 'matters'
+            ? renderMattersContent()
+            : renderContactsContent()
+          : renderEmptyState()}
+      </View>
 
       {/* Floating Action Button */}
       <TouchableOpacity
@@ -160,13 +327,113 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    justifyContent: 'center',
+  },
+  scrollContainer: {
+    flex: 1,
+    paddingHorizontal: spacing.lg,
+  },
+  searchContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: spacing.xxxl,
+    backgroundColor: '#2A2A2A',
+    borderRadius: borderRadius.lg,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    marginVertical: spacing.lg,
+  },
+  searchIcon: {
+    marginRight: spacing.sm,
+  },
+  searchInput: {
+    flex: 1,
+    color: colors.textPrimary,
+    fontSize: fontSize.md,
+  },
+  section: {
+    marginBottom: spacing.xl,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: spacing.md,
+  },
+  sectionTitle: {
+    color: colors.textPrimary,
+    fontSize: fontSize.lg,
+    fontWeight: '600',
+    marginBottom: spacing.md,
+  },
+  filterLink: {
+    color: colors.primaryLight || colors.primary,
+    fontSize: fontSize.sm,
+    fontWeight: '500',
+  },
+  matterItem: {
+    backgroundColor: '#1E1E1E',
+    borderRadius: borderRadius.lg,
+    padding: spacing.lg,
+    marginBottom: spacing.md,
+  },
+  matterTitle: {
+    color: colors.textPrimary,
+    fontSize: fontSize.md,
+    fontWeight: '500',
+    marginBottom: spacing.xs,
+  },
+  matterDescription: {
+    color: colors.textSecondary,
+    fontSize: fontSize.sm,
+    marginBottom: spacing.xs,
+  },
+  matterDate: {
+    color: colors.textSecondary,
+    fontSize: fontSize.sm,
+    fontWeight: '500',
+    marginBottom: spacing.xs,
+  },
+  authorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: spacing.xs,
+  },
+  authorText: {
+    color: colors.textSecondary,
+    fontSize: fontSize.sm,
+    marginLeft: spacing.xs,
+  },
+  contactItem: {
+    backgroundColor: '#1E1E1E',
+    borderRadius: borderRadius.lg,
+    padding: spacing.lg,
+    marginBottom: spacing.md,
+  },
+  contactName: {
+    color: colors.textPrimary,
+    fontSize: fontSize.md,
+    fontWeight: '600',
+    marginBottom: spacing.xs,
+  },
+  contactEmail: {
+    color: colors.textSecondary,
+    fontSize: fontSize.sm,
+    marginBottom: spacing.xs,
+  },
+  contactPhone: {
+    color: colors.textSecondary,
+    fontSize: fontSize.sm,
   },
   emptyStateContainer: {
     alignItems: 'center',
     justifyContent: 'center',
+    flex: 1,
+    paddingHorizontal: spacing.xxxl,
+  },
+  emptyContentContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: spacing.xxxl,
   },
   emptyIconContainer: {
     position: 'relative',
