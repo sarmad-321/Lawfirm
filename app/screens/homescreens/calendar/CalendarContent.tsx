@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { borderRadius, colors, fontSize, spacing } from '../../../utils/theme';
+import { useNavigation } from '@react-navigation/native';
 
 interface Event {
   id: string;
@@ -31,7 +32,7 @@ const CalendarScreenContent = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const horizontalCalendarRef = useRef(null);
   const verticalScrollRef = useRef(null);
-
+  const navigation = useNavigation();
   // Sample events data
   const sampleEvents: { [key: string]: Event[] } = {
     'Mon Aug 11': [
@@ -57,6 +58,10 @@ const CalendarScreenContent = () => {
       },
     ],
     // You can add more events for other dates here
+  };
+
+  const handlePress = item => {
+    navigation.navigate('EventDetail', { event: item });
   };
 
   // Generate dates for horizontal calendar (30 days from today)
@@ -208,7 +213,11 @@ const CalendarScreenContent = () => {
   };
 
   const renderEventItem = ({ item }: { item: Event }) => (
-    <TouchableOpacity style={styles.eventItem} activeOpacity={0.7}>
+    <TouchableOpacity
+      onPress={() => handlePress(item)}
+      style={styles.eventItem}
+      activeOpacity={0.7}
+    >
       <View style={styles.eventContent}>
         {item.userInitials && (
           <View

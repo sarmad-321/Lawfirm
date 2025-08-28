@@ -11,6 +11,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import { colors, spacing, fontSize, borderRadius } from '../../../utils/theme';
 import { useNavigation } from '@react-navigation/native';
+import TaskCard from '../../../components/TaskCard';
 
 interface ActionCard {
   id: string;
@@ -36,10 +37,62 @@ interface Contact {
   initials: string;
   backgroundColor: string;
 }
+const allMatterDetails: MatterDetail[] = [
+  {
+    id: '1',
+    label: 'Matter status',
+    value: 'Open',
+  },
+  {
+    id: '2',
+    label: 'Matter description',
+    value: 'Murder case',
+  },
+  {
+    id: '3',
+    label: 'Responsible attorney',
+    value: 'paul walker',
+  },
+  {
+    id: '4',
+    label: 'Originating attorney',
+    value: 'paul walker',
+  },
+  {
+    id: '5',
+    label: 'Matter notifications',
+    value: 'paul walker',
+  },
+  {
+    id: '6',
+    label: 'Limitations date',
+    value: '—',
+  },
+  {
+    id: '7',
+    label: 'Client name',
+    value: 'John Smith',
+  },
+];
 
 const MatterDetailsScreen: React.FC = ({ route }) => {
+  // Constants for display logic
+  const [showAllMatterDetails, setShowAllMatterDetails] = React.useState(false);
+
+  const INITIAL_ITEMS_TO_SHOW = 5;
+  const visibleMatterDetails = showAllMatterDetails
+    ? allMatterDetails
+    : allMatterDetails.slice(0, INITIAL_ITEMS_TO_SHOW);
+  const remainingItemsCount = allMatterDetails.length - INITIAL_ITEMS_TO_SHOW;
+  const shouldShowViewMore =
+    !showAllMatterDetails && allMatterDetails.length > INITIAL_ITEMS_TO_SHOW;
+
   const matter = route.params?.matter;
   const navigation = useNavigation();
+
+  const handleViewMorePress = () => {
+    setShowAllMatterDetails(!showAllMatterDetails);
+  };
 
   const handleBackPress = () => {
     navigation.goBack();
@@ -96,7 +149,7 @@ const MatterDetailsScreen: React.FC = ({ route }) => {
       subtitle: 'Time entries and expenses',
       icon: 'time',
       iconColor: colors.info,
-      onPress: () => console.log('Activities pressed'),
+      onPress: () => navigation.navigate('MatterActivities'),
     },
     {
       id: '2',
@@ -104,7 +157,7 @@ const MatterDetailsScreen: React.FC = ({ route }) => {
       subtitle: '',
       icon: 'document-text',
       iconColor: colors.info,
-      onPress: () => console.log('Notes pressed'),
+      onPress: () => navigation.navigate('MatterNotes'),
     },
     {
       id: '3',
@@ -112,7 +165,7 @@ const MatterDetailsScreen: React.FC = ({ route }) => {
       subtitle: '',
       icon: 'folder',
       iconColor: colors.info,
-      onPress: () => console.log('Documents pressed'),
+      onPress: () => navigation.navigate('MatterActivities'),
     },
     {
       id: '4',
@@ -120,7 +173,7 @@ const MatterDetailsScreen: React.FC = ({ route }) => {
       subtitle: '',
       icon: 'receipt',
       iconColor: colors.info,
-      onPress: () => console.log('Bills pressed'),
+      onPress: () => navigation.navigate('MatterActivities'),
     },
     {
       id: '5',
@@ -128,7 +181,7 @@ const MatterDetailsScreen: React.FC = ({ route }) => {
       subtitle: '',
       icon: 'chatbubble',
       iconColor: colors.info,
-      onPress: () => console.log('Communication logs pressed'),
+      onPress: () => navigation.navigate('CommLogs'),
     },
     {
       id: '6',
@@ -136,7 +189,7 @@ const MatterDetailsScreen: React.FC = ({ route }) => {
       subtitle: '',
       icon: 'calendar',
       iconColor: colors.info,
-      onPress: () => console.log('Calendar events pressed'),
+      onPress: () => navigation.navigate('MatterActivities'),
     },
     {
       id: '7',
@@ -144,7 +197,7 @@ const MatterDetailsScreen: React.FC = ({ route }) => {
       subtitle: '',
       icon: 'list',
       iconColor: colors.info,
-      onPress: () => console.log('Tasks pressed'),
+      onPress: () => navigation.navigate('MatterActivities'),
     },
   ];
 
@@ -158,6 +211,41 @@ const MatterDetailsScreen: React.FC = ({ route }) => {
       backgroundColor: '#FF6B35',
     },
   ];
+
+  // Add this interface at the top with other interfaces
+  interface MatterDetail {
+    id: string;
+    label: string;
+    value: string;
+  }
+
+  // Add this data array before the render methods
+
+  // Add this render method with other render methods
+  const renderMatterDetail = ({
+    item,
+    index,
+  }: {
+    item: MatterDetail;
+    index: number;
+  }) => (
+    <View>
+      <View style={styles.matterDetailItem}>
+        <Text style={styles.matterDetailLabel}>{item.label}</Text>
+        <Text
+          style={[
+            styles.matterDetailValue,
+            item.value === 'Open' && styles.openStatusText,
+          ]}
+        >
+          {item.value}
+        </Text>
+      </View>
+      {index < visibleMatterDetails.length - 1 && (
+        <View style={styles.matterDetailSeparator} />
+      )}
+    </View>
+  );
 
   const renderActionCard = ({ item }: { item: ActionCard }) => (
     <TouchableOpacity
@@ -272,6 +360,55 @@ const MatterDetailsScreen: React.FC = ({ route }) => {
               renderItem={renderContact}
               keyExtractor={item => item.id}
               scrollEnabled={false}
+            />
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Matter Details</Text>
+          <View style={styles.matterDetailsContainer}>
+            <FlatList
+              data={visibleMatterDetails}
+              renderItem={renderMatterDetail}
+              keyExtractor={item => item.id}
+              scrollEnabled={false}
+            />
+            {(shouldShowViewMore || showAllMatterDetails) && (
+              <TouchableOpacity
+                style={styles.viewMoreButton}
+                onPress={handleViewMorePress}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.viewMoreText}>
+                  {showAllMatterDetails
+                    ? 'View less ▲'
+                    : `View ${remainingItemsCount} more ▼`}
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Financials</Text>
+          <View style={styles.matterDetailsContainer}>
+            <TaskCard
+              title="Oustanding Balance"
+              subtitle="$4.00"
+              icon="cash-outline"
+              color="green"
+            />
+            <TaskCard
+              title="Matter Trust Funds"
+              subtitle="$4.00"
+              icon="briefcase-outline"
+              color="#2D9CDB"
+            />
+            <TaskCard
+              title="Work in Progress"
+              subtitle="$4.00"
+              icon="checkmark-circle-outline"
+              color="#2D9CDB"
             />
           </View>
         </View>
@@ -429,6 +566,44 @@ const styles = StyleSheet.create({
   contactName: {
     color: colors.textPrimary,
     fontSize: fontSize.lg,
+  },
+  matterDetailsContainer: {
+    backgroundColor: colors.surfaceLight,
+    borderRadius: borderRadius.lg,
+    overflow: 'hidden',
+  },
+  matterDetailItem: {
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+  },
+  matterDetailLabel: {
+    color: colors.textSecondary,
+    fontSize: fontSize.sm,
+    marginBottom: 4,
+  },
+  matterDetailValue: {
+    color: colors.textPrimary,
+    fontSize: fontSize.md,
+    fontWeight: '500',
+  },
+  openStatusText: {
+    color: colors.info || '#3B82F6',
+  },
+  matterDetailSeparator: {
+    height: 1,
+    backgroundColor: colors.gray700 || '#404040',
+    marginHorizontal: spacing.lg,
+  },
+  viewMoreButton: {
+    alignItems: 'center',
+    paddingVertical: spacing.lg,
+    borderTopWidth: 1,
+    borderTopColor: colors.gray700 || '#404040',
+  },
+  viewMoreText: {
+    color: colors.info || '#3B82F6',
+    fontSize: fontSize.md,
+    fontWeight: '500',
   },
 });
 

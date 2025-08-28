@@ -50,7 +50,7 @@ const HomeScreen: React.FC = ({ navigation }) => {
       title: 'Phadda hogya hay salary hike naa dene pe',
       description: '',
       date: '',
-      author: 'Atta Rahi Mubasshir',
+      author: 'Atta Rabi Mubasshir',
     },
     {
       id: '00002-Rizwan',
@@ -64,13 +64,14 @@ const HomeScreen: React.FC = ({ navigation }) => {
   const [contacts] = useState<Contact[]>([
     {
       id: '1',
-      name: 'Atta Rahi Mubasshir',
+      name: 'Atta Rabi Mubasshir',
       email: 'attaRabi@gmail.com',
     },
   ]);
 
   const handleSettingsPress = () => {
     console.log('Settings pressed');
+    navigation.navigate('Settings');
   };
 
   const handleNotificationPress = () => {
@@ -82,7 +83,7 @@ const HomeScreen: React.FC = ({ navigation }) => {
   };
 
   const handleAddPress = () => {
-    // setHasData(true);
+    setHasData(true);
     console.log('Add button pressed');
   };
 

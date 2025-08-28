@@ -9,6 +9,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import { borderRadius, colors, fontSize, spacing } from '../../../utils/theme';
 import HeaderV2 from '../../../components/headerv2';
+import { useNavigation } from '@react-navigation/native';
 
 interface Task {
   id: string;
@@ -34,7 +35,7 @@ const TaskScreen = () => {
   >('upcoming');
   const [tasks, setTasks] = useState<Task[]>([]);
   const horizontalFilterRef = useRef(null);
-
+  const navigation = useNavigation();
   // Dummy data to load when FAB is pressed
   const dummyTasks: Task[] = [
     {
@@ -140,7 +141,11 @@ const TaskScreen = () => {
   };
 
   const handleFabPress = () => {
-    // setTasks(dummyTasks);
+    setTasks(dummyTasks);
+  };
+
+  const handleTaskPress = item => {
+    navigation.navigate('TaskDetails', { task: item });
   };
 
   const getPriorityColor = (priority?: string) => {
@@ -191,7 +196,11 @@ const TaskScreen = () => {
   };
 
   const renderTaskItem = ({ item }: { item: Task }) => (
-    <TouchableOpacity style={styles.taskItem} activeOpacity={0.7}>
+    <TouchableOpacity
+      onPress={() => handleTaskPress(item)}
+      style={styles.taskItem}
+      activeOpacity={0.7}
+    >
       <View style={styles.taskContent}>
         {item.userInitials && (
           <View
