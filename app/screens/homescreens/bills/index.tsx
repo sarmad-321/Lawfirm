@@ -11,6 +11,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { borderRadius, colors, fontSize, spacing } from '../../../utils/theme';
 import HeaderV2 from '../../../components/headerv2';
 import { useNavigation } from '@react-navigation/native';
+import BillCard, { BillCardData } from '../../../components/BillCard';
 
 interface Bill {
   id: string;
@@ -20,6 +21,8 @@ interface Bill {
   dueDate: string;
   status: 'draft' | 'pending' | 'paid' | 'overdue';
   daysLeft?: number;
+  matterId?: string;
+  clientName?: string;
 }
 
 interface BalanceInfo {
@@ -30,7 +33,7 @@ interface BalanceInfo {
 const BillsScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [bills, setBills] = useState<Bill[]>([]);
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
 
   // Balance information
   const balanceInfo: BalanceInfo = {
@@ -48,6 +51,8 @@ const BillsScreen = () => {
       dueDate: 'in 27 days',
       status: 'draft',
       daysLeft: 27,
+      matterId: '00001-wick',
+      clientName: 'john wick',
     },
     {
       id: '2',
@@ -57,6 +62,8 @@ const BillsScreen = () => {
       dueDate: 'in 15 days',
       status: 'pending',
       daysLeft: 15,
+      matterId: '00001-wick',
+      clientName: 'john wick',
     },
     {
       id: '3',
@@ -66,6 +73,8 @@ const BillsScreen = () => {
       dueDate: 'in 5 days',
       status: 'pending',
       daysLeft: 5,
+      matterId: '00001-wick',
+      clientName: 'john wick',
     },
     {
       id: '4',
@@ -74,6 +83,8 @@ const BillsScreen = () => {
       amount: 299.0,
       dueDate: 'Overdue by 3 days',
       status: 'overdue',
+      matterId: '00001-wick',
+      clientName: 'john wick',
     },
     {
       id: '5',
@@ -82,6 +93,8 @@ const BillsScreen = () => {
       amount: 125.3,
       dueDate: 'Paid',
       status: 'paid',
+      matterId: '00001-wick',
+      clientName: 'john wick',
     },
   ];
 
@@ -97,57 +110,17 @@ const BillsScreen = () => {
   };
 
   const handleBillPress = (item: Bill) => {
-    navigation.navigate('BillDetails', { bill: item });
+    // Navigate when BillDetails route exists in the stack
+    try {
+      navigation.navigate('BillsDetails', { bill: item });
+    } catch (e) {}
   };
 
   const loadSampleBills = () => {
     setBills(dummyBills);
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'draft':
-        return '#9CA3AF'; // Gray
-      case 'pending':
-        return '#F59E0B'; // Amber
-      case 'paid':
-        return '#10B981'; // Green
-      case 'overdue':
-        return '#EF4444'; // Red
-      default:
-        return colors.textSecondary;
-    }
-  };
-
-  const getStatusBadgeStyle = (status: string) => {
-    switch (status) {
-      case 'draft':
-        return {
-          backgroundColor: 'rgba(156, 163, 175, 0.2)',
-          borderColor: '#9CA3AF',
-        };
-      case 'pending':
-        return {
-          backgroundColor: 'rgba(245, 158, 11, 0.2)',
-          borderColor: '#F59E0B',
-        };
-      case 'paid':
-        return {
-          backgroundColor: 'rgba(16, 185, 129, 0.2)',
-          borderColor: '#10B981',
-        };
-      case 'overdue':
-        return {
-          backgroundColor: 'rgba(239, 68, 68, 0.2)',
-          borderColor: '#EF4444',
-        };
-      default:
-        return {
-          backgroundColor: colors.gray700,
-          borderColor: colors.textSecondary,
-        };
-    }
-  };
+  // Status helpers moved into BillCard
 
   const renderBalanceCard = () => (
     <View style={styles.balanceCard}>
@@ -166,55 +139,14 @@ const BillsScreen = () => {
     </View>
   );
 
-  const renderSearchBar = () => (
-    <View style={styles.searchContainer}>
-      <Icon name="search" size={20} color={colors.textSecondary} />
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Search bill by ID..."
-        placeholderTextColor={colors.textSecondary}
-        value={searchQuery}
-        onChangeText={handleSearchChange}
-      />
-    </View>
-  );
+  // Legacy search UI retained for reference (unused)
 
   const renderBillItem = ({ item }: { item: Bill }) => (
-    <TouchableOpacity
+    <BillCard
+      bill={item as unknown as BillCardData}
       onPress={() => handleBillPress(item)}
       style={styles.billItem}
-      activeOpacity={0.7}
-    >
-      <View style={styles.billContent}>
-        <View style={styles.billTextContainer}>
-          <Text style={styles.billTitle}>{item.title}</Text>
-          <Text style={styles.invoiceNumber}>{item.invoiceNumber}</Text>
-          <Text style={styles.dueDate}>{item.dueDate}</Text>
-
-          <View style={[styles.statusBadge, getStatusBadgeStyle(item.status)]}>
-            <Text
-              style={[
-                styles.statusText,
-                { color: getStatusColor(item.status) },
-              ]}
-            >
-              {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.billAmountContainer}>
-          <Text style={styles.billAmount}>£{item.amount.toFixed(2)}</Text>
-          <TouchableOpacity style={styles.moreButton}>
-            <Icon
-              name="ellipsis-horizontal"
-              size={16}
-              color={colors.textSecondary}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
-    </TouchableOpacity>
+    />
   );
 
   const renderEmptyState = () => (
@@ -232,22 +164,35 @@ const BillsScreen = () => {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <HeaderV2
-        title="Bills"
-        subtitle="00001 Multilaw ltd"
-        showBackButton={true}
-        rightComponent={
-          <TouchableOpacity>
-            <Icon name="filter" size={24} color={colors.textPrimary} />
-          </TouchableOpacity>
-        }
-      />
+      <HeaderV2 title="Bills" />
 
+      {/* Top Controls */}
+      <View style={styles.topControlsBar}>
+        <View style={styles.topControlsInner}>
+          <View style={styles.searchContainerAlt}>
+            <Icon name="search" size={18} color={colors.textPrimary} />
+            <TextInput
+              style={styles.searchInputAlt}
+              placeholder="Search bill by ID..."
+              placeholderTextColor={colors.textPrimary}
+              value={searchQuery}
+              onChangeText={handleSearchChange}
+            />
+          </View>
+          <TouchableOpacity style={styles.filterPill} activeOpacity={0.85}>
+            <Text style={styles.filterPillText}>All matters</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.settingsIconBtn}>
+            <Icon
+              name="settings-outline"
+              size={18}
+              color={colors.textPrimary}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
       {/* Balance Cards */}
       {renderBalanceCard()}
-
-      {/* Search Bar */}
-      {renderSearchBar()}
 
       {/* Bill List */}
       <View style={styles.billListContainer}>
@@ -321,6 +266,47 @@ const styles = StyleSheet.create({
   billListContainer: {
     flex: 1,
   },
+  topControlsBar: {
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.md,
+    backgroundColor: colors.primary,
+  },
+  topControlsInner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  searchContainerAlt: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.primaryDark,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: borderRadius.sm,
+    marginRight: spacing.sm,
+  },
+  searchInputAlt: {
+    flex: 1,
+    marginLeft: spacing.xs,
+    fontSize: fontSize.sm,
+    color: colors.textPrimary,
+  },
+  filterPill: {
+    backgroundColor: colors.primaryDark,
+    borderRadius: borderRadius.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    marginRight: spacing.sm,
+  },
+  filterPillText: {
+    color: colors.textPrimary,
+    fontSize: fontSize.sm,
+    fontWeight: '600',
+  },
+  settingsIconBtn: {
+    padding: spacing.sm,
+  },
   billListContent: {
     paddingBottom: 100, // Space for FAB
   },
@@ -328,59 +314,10 @@ const styles = StyleSheet.create({
     marginHorizontal: spacing.lg,
     marginVertical: spacing.xs,
   },
-  billContent: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    backgroundColor: colors.surface,
-    borderRadius: borderRadius.lg,
-    padding: spacing.lg,
-    borderWidth: 1,
-    borderColor: colors.gray700,
-  },
   billTextContainer: {
     flex: 1,
   },
-  billTitle: {
-    fontSize: fontSize.lg,
-    fontWeight: '600',
-    color: colors.textPrimary,
-    marginBottom: spacing.xs,
-  },
-  invoiceNumber: {
-    fontSize: fontSize.md,
-    color: colors.textSecondary,
-    marginBottom: spacing.xs,
-  },
-  dueDate: {
-    fontSize: fontSize.sm,
-    color: colors.textSecondary,
-    marginBottom: spacing.sm,
-  },
-  statusBadge: {
-    alignSelf: 'flex-start',
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 4,
-    borderRadius: borderRadius.sm,
-    borderWidth: 1,
-  },
-  statusText: {
-    fontSize: fontSize.xs,
-    fontWeight: '500',
-    textTransform: 'capitalize',
-  },
-  billAmountContainer: {
-    alignItems: 'flex-end',
-    marginLeft: spacing.md,
-  },
-  billAmount: {
-    fontSize: fontSize.lg,
-    fontWeight: '600',
-    color: colors.textPrimary,
-    marginBottom: spacing.sm,
-  },
-  moreButton: {
-    padding: spacing.xs,
-  },
+  // Card styles moved to `app/components/BillCard`, only keep list spacing here
   emptyStateContainer: {
     flex: 1,
     justifyContent: 'center',

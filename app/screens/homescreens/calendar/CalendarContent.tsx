@@ -35,7 +35,7 @@ const CalendarScreenContent = () => {
   const navigation = useNavigation();
   // Sample events data
   const sampleEvents: { [key: string]: Event[] } = {
-    'Mon Aug 11': [
+    'Mon Sep 1': [
       {
         id: '1',
         title: '00001-Mubasshir',
@@ -46,7 +46,7 @@ const CalendarScreenContent = () => {
         backgroundColor: colors.secondary,
       },
     ],
-    'Mon Aug 18': [
+    'Mon Sep 8': [
       {
         id: '1',
         title: '00001-Mubasshir',

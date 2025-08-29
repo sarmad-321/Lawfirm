@@ -19,6 +19,9 @@ import MatterActivities from '../../screens/homescreens/home/MatterActivities';
 import MatterNotes from '../../screens/homescreens/home/MatterNotes';
 import CommLogs from '../../screens/homescreens/home/CommLogs';
 import CalendarEvents from '../../screens/homescreens/home/CalendarEvents';
+import EditMenu from '../../screens/homescreens/settings/EditMenu';
+import MatterBills from '../../screens/homescreens/home/MatterBills';
+import BillsDetails from '../../screens/homescreens/bills/BillsDetails';
 
 const Tab = createBottomTabNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -33,6 +36,8 @@ const HomeStackScreen = () => {
       <HomeStack.Screen name="MatterNotes" component={MatterNotes} />
       <HomeStack.Screen name="CommLogs" component={CommLogs} />
       <HomeStack.Screen name="MatterEvents" component={CalendarEvents} />
+      <HomeStack.Screen name="EditMenu" component={EditMenu} />
+      <HomeStack.Screen name="MatterBills" component={MatterBills} />
     </HomeStack.Navigator>
   );
 };
@@ -42,6 +47,15 @@ const TaskStackScreen = () => {
     <HomeStack.Navigator screenOptions={{ headerShown: false }}>
       <HomeStack.Screen name="TaskScreen" component={TaskScreen} />
       <HomeStack.Screen name="TaskDetails" component={TaskDetails} />
+    </HomeStack.Navigator>
+  );
+};
+
+const BillsStackScreen = () => {
+  return (
+    <HomeStack.Navigator screenOptions={{ headerShown: false }}>
+      <HomeStack.Screen name="BillsScreen" component={BillsScreen} />
+      <HomeStack.Screen name="BillsDetails" component={BillsDetails} />
     </HomeStack.Navigator>
   );
 };
@@ -177,7 +191,7 @@ export default function LawyerTabs() {
       />
       <Tab.Screen
         name="Bills"
-        component={BillsScreen}
+        component={BillsStackScreen}
         options={{
           tabBarLabel: 'Bills',
         }}

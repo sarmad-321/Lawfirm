@@ -17,6 +17,10 @@ import {
   shadow,
   spacing,
 } from '../../../utils/theme';
+import PopupWrapper, {
+  PopupWrapperRef,
+} from '../../../components/PopupWrapper';
+import CreatePopup from '../../../components/CreatePopup';
 
 interface Matter {
   id: string;
@@ -37,17 +41,18 @@ const HomeScreen: React.FC = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState<'matters' | 'contacts'>('matters');
   const [searchQuery, setSearchQuery] = useState('');
   const [hasData, setHasData] = useState(false);
+  const createPopupRef = React.useRef<PopupWrapperRef>(null);
   // Sample data - replace with your actual data
   const [matters] = useState<Matter[]>([
     {
-      id: '00001-Mubasshir',
-      title: 'Phadda hogya hay salary hike naa den...',
+      id: '00001-Crime report',
+      title: 'Mobile got snatched',
       description: '',
       date: 'Today',
     },
     {
-      id: '00001-Mubasshir',
-      title: 'Phadda hogya hay salary hike naa dene pe',
+      id: '00001-Crime report',
+      title: 'Mobile got snatched',
       description: '',
       date: '',
       author: 'Atta Rabi Mubasshir',
@@ -84,6 +89,9 @@ const HomeScreen: React.FC = ({ navigation }) => {
 
   const handleAddPress = () => {
     setHasData(true);
+    setTimeout(() => {
+      createPopupRef.current?.show();
+    }, 1500);
     console.log('Add button pressed');
   };
 
@@ -287,6 +295,9 @@ const HomeScreen: React.FC = ({ navigation }) => {
       >
         <Icon name="add" size={28} color={colors.textPrimary} />
       </TouchableOpacity>
+      <PopupWrapper ref={createPopupRef}>
+        <CreatePopup />
+      </PopupWrapper>
     </SafeAreaView>
   );
 };

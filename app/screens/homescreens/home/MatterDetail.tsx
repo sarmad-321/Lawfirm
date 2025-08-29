@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { colors, spacing, fontSize, borderRadius } from '../../../utils/theme';
 import { useNavigation } from '@react-navigation/native';
 import TaskCard from '../../../components/TaskCard';
+import ActionCard from '../../../components/ActionCard';
 
 interface ActionCard {
   id: string;
@@ -75,7 +76,26 @@ const allMatterDetails: MatterDetail[] = [
   },
 ];
 
-const MatterDetailsScreen: React.FC = ({ route }) => {
+interface MatterDetail {
+  id: string;
+  label: string;
+  value: string;
+}
+
+// Fix the MatterDetailsScreen props typing
+interface MatterDetailsScreenProps {
+  route: {
+    params?: {
+      matter: {
+        id: string;
+        title: string;
+        description: string;
+      };
+    };
+  };
+}
+
+const MatterDetailsScreen: React.FC<MatterDetailsScreenProps> = ({ route }) => {
   // Constants for display logic
   const [showAllMatterDetails, setShowAllMatterDetails] = React.useState(false);
 
@@ -88,7 +108,7 @@ const MatterDetailsScreen: React.FC = ({ route }) => {
     !showAllMatterDetails && allMatterDetails.length > INITIAL_ITEMS_TO_SHOW;
 
   const matter = route.params?.matter;
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
 
   const handleViewMorePress = () => {
     setShowAllMatterDetails(!showAllMatterDetails);
@@ -149,7 +169,7 @@ const MatterDetailsScreen: React.FC = ({ route }) => {
       subtitle: 'Time entries and expenses',
       icon: 'time',
       iconColor: colors.info,
-      onPress: () => navigation.navigate('MatterActivities'),
+      onPress: () => (navigation as any).navigate('MatterActivities'),
     },
     {
       id: '2',
@@ -157,7 +177,7 @@ const MatterDetailsScreen: React.FC = ({ route }) => {
       subtitle: '',
       icon: 'document-text',
       iconColor: colors.info,
-      onPress: () => navigation.navigate('MatterNotes'),
+      onPress: () => (navigation as any).navigate('MatterNotes'),
     },
     {
       id: '3',
@@ -165,7 +185,7 @@ const MatterDetailsScreen: React.FC = ({ route }) => {
       subtitle: '',
       icon: 'folder',
       iconColor: colors.info,
-      onPress: () => navigation.navigate('MatterActivities'),
+      onPress: () => (navigation as any).navigate('MatterActivities'),
     },
     {
       id: '4',
@@ -173,7 +193,7 @@ const MatterDetailsScreen: React.FC = ({ route }) => {
       subtitle: '',
       icon: 'receipt',
       iconColor: colors.info,
-      onPress: () => navigation.navigate('MatterActivities'),
+      onPress: () => (navigation as any).navigate('MatterBills'),
     },
     {
       id: '5',
@@ -181,7 +201,7 @@ const MatterDetailsScreen: React.FC = ({ route }) => {
       subtitle: '',
       icon: 'chatbubble',
       iconColor: colors.info,
-      onPress: () => navigation.navigate('CommLogs'),
+      onPress: () => (navigation as any).navigate('CommLogs'),
     },
     {
       id: '6',
@@ -189,7 +209,7 @@ const MatterDetailsScreen: React.FC = ({ route }) => {
       subtitle: '',
       icon: 'calendar',
       iconColor: colors.info,
-      onPress: () => navigation.navigate('MatterActivities'),
+      onPress: () => (navigation as any).navigate('MatterActivities'),
     },
     {
       id: '7',
@@ -197,7 +217,7 @@ const MatterDetailsScreen: React.FC = ({ route }) => {
       subtitle: '',
       icon: 'list',
       iconColor: colors.info,
-      onPress: () => navigation.navigate('MatterActivities'),
+      onPress: () => (navigation as any).navigate('MatterActivities'),
     },
   ];
 
@@ -211,15 +231,6 @@ const MatterDetailsScreen: React.FC = ({ route }) => {
       backgroundColor: '#FF6B35',
     },
   ];
-
-  // Add this interface at the top with other interfaces
-  interface MatterDetail {
-    id: string;
-    label: string;
-    value: string;
-  }
-
-  // Add this data array before the render methods
 
   // Add this render method with other render methods
   const renderMatterDetail = ({
@@ -245,17 +256,6 @@ const MatterDetailsScreen: React.FC = ({ route }) => {
         <View style={styles.matterDetailSeparator} />
       )}
     </View>
-  );
-
-  const renderActionCard = ({ item }: { item: ActionCard }) => (
-    <TouchableOpacity
-      style={[styles.actionCard, { backgroundColor: item.backgroundColor }]}
-      onPress={item.onPress}
-      activeOpacity={0.8}
-    >
-      <Icon name={item.icon} size={24} color={colors.white} />
-      <Text style={styles.actionCardText}>{item.title}</Text>
-    </TouchableOpacity>
   );
 
   const renderMatterContent = ({ item }: { item: MatterContent }) => (
@@ -314,9 +314,11 @@ const MatterDetailsScreen: React.FC = ({ route }) => {
       </View>
       <View style={styles.matterInfo}>
         <Text style={styles.matterNumber}>
-          {matter.id} - {matter.title}
+          {matter?.id ?? ''} - {matter?.title ?? ''}
         </Text>
-        <Text style={styles.matterDescription}>{matter.description}</Text>
+        <Text style={styles.matterDescription}>
+          {matter?.description ?? ''}
+        </Text>
       </View>
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {/* Matter Info */}
@@ -326,14 +328,20 @@ const MatterDetailsScreen: React.FC = ({ route }) => {
           <Text style={styles.sectionTitle}>Add to this matter</Text>
           <FlatList
             data={actionCards}
-            renderItem={renderActionCard}
+            renderItem={({ item }) => (
+              <ActionCard
+                icon={item.icon}
+                title={item.title}
+                backgroundColor={item.backgroundColor}
+                onPress={item.onPress}
+                style={styles.actionCard}
+              />
+            )}
             keyExtractor={item => item.id}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.actionCardsContainer}
-            ItemSeparatorComponent={() => (
-              <View style={{ width: spacing.md }} />
-            )}
+            ItemSeparatorComponent={ActionCardSeparator}
           />
         </View>
 
@@ -346,7 +354,7 @@ const MatterDetailsScreen: React.FC = ({ route }) => {
               renderItem={renderMatterContent}
               keyExtractor={item => item.id}
               scrollEnabled={false}
-              ItemSeparatorComponent={() => <View style={styles.separator} />}
+              ItemSeparatorComponent={MatterContentSeparator}
             />
           </View>
         </View>
@@ -413,12 +421,15 @@ const MatterDetailsScreen: React.FC = ({ route }) => {
           </View>
         </View>
 
-        {/* Bottom spacing for safe area */}
-        <View style={{ height: 100 }} />
+        <BottomSpacing />
       </ScrollView>
     </SafeAreaView>
   );
 };
+
+const ActionCardSeparator = () => <View style={{ width: spacing.md }} />;
+const MatterContentSeparator = () => <View style={styles.separator} />;
+const BottomSpacing = () => <View style={styles.bottomSpacing} />;
 
 const styles = StyleSheet.create({
   container: {
@@ -604,6 +615,9 @@ const styles = StyleSheet.create({
     color: colors.info || '#3B82F6',
     fontSize: fontSize.md,
     fontWeight: '500',
+  },
+  bottomSpacing: {
+    height: 100,
   },
 });
 
