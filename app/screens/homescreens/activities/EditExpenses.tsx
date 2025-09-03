@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 
-const MatterActivities = () => {
+const EditExpenses = () => {
   return (
     <View>
-      <Text>MatterActivities</Text>
+      <Text>EditExpenses</Text>
     </View>
   );
 };
 
-export default MatterActivities;
+export default EditExpenses;
 
 const styles = StyleSheet.create({});

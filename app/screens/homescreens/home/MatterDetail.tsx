@@ -185,7 +185,7 @@ const MatterDetailsScreen: React.FC<MatterDetailsScreenProps> = ({ route }) => {
       subtitle: '',
       icon: 'folder',
       iconColor: colors.info,
-      onPress: () => (navigation as any).navigate('MatterActivities'),
+      onPress: () => (navigation as any).navigate('MatterDocuments'),
     },
     {
       id: '4',
@@ -209,7 +209,7 @@ const MatterDetailsScreen: React.FC<MatterDetailsScreenProps> = ({ route }) => {
       subtitle: '',
       icon: 'calendar',
       iconColor: colors.info,
-      onPress: () => (navigation as any).navigate('MatterActivities'),
+      onPress: () => (navigation as any).navigate('MatterEvents'),
     },
     {
       id: '7',
@@ -217,7 +217,7 @@ const MatterDetailsScreen: React.FC<MatterDetailsScreenProps> = ({ route }) => {
       subtitle: '',
       icon: 'list',
       iconColor: colors.info,
-      onPress: () => (navigation as any).navigate('MatterActivities'),
+      onPress: () => (navigation as any).navigate('MatterTasks'),
     },
   ];
 

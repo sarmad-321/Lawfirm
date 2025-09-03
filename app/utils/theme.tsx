@@ -12,9 +12,9 @@ export const colors = {
   secondaryLight: '#34D399',
 
   // Background Colors
-  background: '#1F2937',
+  background: '#111827',
   backgroundDark: '#111827',
-  backgroundLight: '#374151',
+  backgroundLight: '#1E2535',
 
   // Surface Colors
   surface: '#1F2937',

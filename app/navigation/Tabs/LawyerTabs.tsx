@@ -22,6 +22,11 @@ import CalendarEvents from '../../screens/homescreens/home/CalendarEvents';
 import EditMenu from '../../screens/homescreens/settings/EditMenu';
 import MatterBills from '../../screens/homescreens/home/MatterBills';
 import BillsDetails from '../../screens/homescreens/bills/BillsDetails';
+import MatterDocuments from '../../screens/homescreens/home/MatterDocuments';
+import EditMatterTime from '../../screens/homescreens/home/EditMatterTime';
+import EditTimeEntries from '../../screens/homescreens/activities/EditTimeEntries';
+import NewExpense from '../../screens/homescreens/activities/NewExpense';
+import AddDocuments from '../../screens/homescreens/createScreens/AddDocuments';
 
 const Tab = createBottomTabNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -32,12 +37,16 @@ const HomeStackScreen = () => {
       <HomeStack.Screen name="HomeScreen" component={HomeScreen} />
       <HomeStack.Screen name="MatterDetail" component={MatterDetail} />
       <HomeStack.Screen name="Settings" component={SettingsScreen} />
-      <HomeStack.Screen name="MatterActivities" component={MatterActivities} />
+      <HomeStack.Screen name="MatterActivities" component={Activities} />
+      <HomeStack.Screen name="EditMatterTime" component={EditMatterTime} />
       <HomeStack.Screen name="MatterNotes" component={MatterNotes} />
       <HomeStack.Screen name="CommLogs" component={CommLogs} />
       <HomeStack.Screen name="MatterEvents" component={CalendarEvents} />
       <HomeStack.Screen name="EditMenu" component={EditMenu} />
       <HomeStack.Screen name="MatterBills" component={MatterBills} />
+      <HomeStack.Screen name="MatterDocuments" component={MatterDocuments} />
+      <HomeStack.Screen name="EditTimeEntries" component={EditTimeEntries} />
+      <HomeStack.Screen name="MatterTasks" component={TaskStackScreen} />
     </HomeStack.Navigator>
   );
 };
@@ -65,6 +74,16 @@ const CalendarStackScreen = () => {
     <HomeStack.Navigator screenOptions={{ headerShown: false }}>
       <HomeStack.Screen name="CalendarScreen" component={Calendar} />
       <HomeStack.Screen name="EventDetail" component={EventDetail} />
+    </HomeStack.Navigator>
+  );
+};
+
+const ActivitiesStackScreen = () => {
+  return (
+    <HomeStack.Navigator screenOptions={{ headerShown: false }}>
+      <HomeStack.Screen name="ActivityScreen" component={Activities} />
+      <HomeStack.Screen name="EditTimeEntries" component={EditTimeEntries} />
+      <HomeStack.Screen name="AddNewExpense" component={NewExpense} />
     </HomeStack.Navigator>
   );
 };
@@ -177,7 +196,7 @@ export default function LawyerTabs() {
       />
       <Tab.Screen
         name="Activities"
-        component={Activities}
+        component={ActivitiesStackScreen}
         options={{
           tabBarLabel: 'Activities',
         }}

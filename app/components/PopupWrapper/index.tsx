@@ -14,6 +14,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { vh, vw } from '../../utils/units';
@@ -93,43 +94,45 @@ const PopupWrapper = forwardRef<PopupWrapperRef, PopupWrapperProps>(
     };
 
     return (
-      <Modal
-        transparent
-        visible={visible}
-        animationType="none"
-        onRequestClose={hide}
-      >
-        <Animated.View
-          style={[
-            styles.backdrop,
-            {
-              opacity: backdropOpacity,
-            },
-          ]}
+      <View>
+        <Modal
+          transparent
+          visible={visible}
+          animationType="none"
+          onRequestClose={hide}
         >
-          <TouchableOpacity
-            style={styles.backdropTouchable}
-            activeOpacity={1}
-            onPress={hide}
-          />
-        </Animated.View>
-        <Animated.View
-          style={[
-            styles.bottomSheet,
-            { transform: [{ translateY }] }, // Animated slide-up
-          ]}
-        >
-          <TouchableOpacity style={styles.crossIcon} onPress={hide}>
-            <Icon name="close" size={24} color="#333" />
-          </TouchableOpacity>
-          <ScrollView
-            contentContainerStyle={{ paddingBottom: 50 }}
-            style={styles.content}
+          <Animated.View
+            style={[
+              styles.backdrop,
+              {
+                opacity: backdropOpacity,
+              },
+            ]}
           >
-            {props.children}
-          </ScrollView>
-        </Animated.View>
-      </Modal>
+            <TouchableOpacity
+              style={styles.backdropTouchable}
+              activeOpacity={1}
+              onPress={hide}
+            />
+          </Animated.View>
+          <Animated.View
+            style={[
+              styles.bottomSheet,
+              { transform: [{ translateY }] }, // Animated slide-up
+            ]}
+          >
+            <TouchableOpacity style={styles.crossIcon} onPress={hide}>
+              <Icon name="close" size={24} color="#333" />
+            </TouchableOpacity>
+            <ScrollView
+              contentContainerStyle={{ paddingBottom: 0 }}
+              style={styles.content}
+            >
+              {props.children}
+            </ScrollView>
+          </Animated.View>
+        </Modal>
+      </View>
     );
   },
 );

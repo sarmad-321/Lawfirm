@@ -18,7 +18,14 @@ import {
 import { useNavigation } from '@react-navigation/native';
 
 const actions = [
-  { key: 'note', icon: 'create-outline', title: 'Note', color: '#0EA5E9' },
+  {
+    key: 'matter',
+    icon: 'briefcase-outline',
+    title: 'Matter',
+    color: '#6366F1',
+  },
+  { key: 'event', icon: 'calendar-outline', title: 'Event', color: '#F59E42' },
+  { key: 'task', icon: 'checkmark-outline', title: 'Task', color: '#EF4444' },
   {
     key: 'document',
     icon: 'document-text-outline',
@@ -31,8 +38,8 @@ const actions = [
     title: 'Contact',
     color: '#A855F7',
   },
-  { key: 'email', icon: 'mail-outline', title: 'Email log', color: '#F59E0B' },
-  { key: 'phone', icon: 'call-outline', title: 'Phone log', color: '#EF4444' },
+  { key: 'comm', icon: 'call-outline', title: 'Comm logs', color: '#EF4444' },
+  { key: 'notes', icon: 'mail-outline', title: 'Notes', color: '#F59E0B' },
   {
     key: 'edit',
     icon: 'pencil-outline',
@@ -50,6 +57,26 @@ const CreatePopup = () => {
   const onActionPress = (key: string) => () => {
     if (key === 'edit') {
       navigation.navigate('EditMenu');
+      return;
+    }
+    if (key === 'document') {
+      navigation.navigate('AddDocuments');
+      return;
+    }
+    if (key === 'event') {
+      navigation.navigate('AddEvent');
+      return;
+    }
+    if (key === 'task') {
+      navigation.navigate('AddTask');
+      return;
+    }
+    if (key === 'notes') {
+      navigation.navigate('AddNotes');
+      return;
+    }
+    if (key === 'comm') {
+      navigation.navigate('AddLogs');
       return;
     }
     // handle other keys when wired up

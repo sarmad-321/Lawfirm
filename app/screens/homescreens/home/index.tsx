@@ -350,7 +350,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#2A2A2A',
     borderRadius: borderRadius.lg,
     paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
     marginVertical: spacing.lg,
   },
   searchIcon: {
@@ -382,7 +381,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   matterItem: {
-    backgroundColor: '#1E1E1E',
+    backgroundColor: colors.surface,
     borderRadius: borderRadius.lg,
     padding: spacing.lg,
     marginBottom: spacing.md,
@@ -415,7 +414,7 @@ const styles = StyleSheet.create({
     marginLeft: spacing.xs,
   },
   contactItem: {
-    backgroundColor: '#1E1E1E',
+    backgroundColor: colors.surface,
     borderRadius: borderRadius.lg,
     padding: spacing.lg,
     marginBottom: spacing.md,

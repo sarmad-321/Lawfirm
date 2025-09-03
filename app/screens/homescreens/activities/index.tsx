@@ -21,7 +21,8 @@ import {
   spacing,
 } from '../../../utils/theme';
 import HeaderV2 from '../../../components/headerv2';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import TimeEntryCard from '../../../components/TimeEntryCard';
 
 const { width: screenWidth } = Dimensions.get('window');
 const SWIPE_THRESHOLD = 80;
@@ -56,7 +57,6 @@ const SwipeableCard = ({
 }) => {
   const [pan] = useState(new Animated.Value(0));
   const [isOpen, setIsOpen] = useState(false);
-
   useEffect(() => {
     console.log(shouldShowDemo, index, 'card details');
     if (shouldShowDemo && index === 0) {
@@ -163,26 +163,7 @@ const SwipeableCard = ({
         {...panResponder.panHandlers}
       >
         <TouchableOpacity onPress={closeSwipe} activeOpacity={1}>
-          <View style={styles.entryHeader}>
-            <View style={styles.initialsContainer}>
-              <Text style={styles.initialsText}>{item.initials}</Text>
-            </View>
-            <View style={styles.entryContent}>
-              <Text style={styles.matterText}>{item.matter}</Text>
-              <Text style={styles.descriptionText}>{item.description}</Text>
-              {item.amount !== '£0.00' && (
-                <View style={styles.draftBadge}>
-                  <Text style={styles.draftText}>Draft</Text>
-                </View>
-              )}
-            </View>
-            <View style={styles.entryRight}>
-              <Text style={styles.durationText}>{item.duration}</Text>
-              {item.amount !== '£0.00' && (
-                <Text style={styles.amountText}>{item.amount}</Text>
-              )}
-            </View>
-          </View>
+          <TimeEntryCard item={item} />
 
           {/* Action Buttons for entries that can be started */}
           {item.amount === '£0.00' && (
@@ -212,6 +193,7 @@ const SwipeableCard = ({
 const Activities: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'time' | 'expenses'>('time');
   const [demoShown, setDemoShown] = useState(false);
+  const navigation = useNavigation();
 
   // Enhanced sample data
   const dailyTotals: DailyTotal[] = [
@@ -237,6 +219,7 @@ const Activities: React.FC = () => {
           amount: '£0.00',
           matter: 'No matter selected',
           initials: 'SS',
+          draft: true,
         },
         {
           id: '3',
@@ -265,10 +248,13 @@ const Activities: React.FC = () => {
 
   const handleStart = (item: TimeEntry) => {
     console.log('Start:', item.id);
+    navigation.navigate('EditTimeEntries');
   };
 
   const handleAddPress = () => {
-    console.log('Add activity pressed');
+    if (activeTab === 'expenses') {
+      navigation.navigate('AddNewExpense');
+    }
   };
 
   const handleDemoComplete = () => {
