@@ -16,6 +16,9 @@ import PopupWrapper, {
 } from '../../../components/PopupWrapper';
 import DocumentPicker from '../../../components/DocumentPicker';
 import UploadDocument from '../../../components/UploadSection';
+import FormsDropdown from '../../../components/FormsDropdown';
+import FormsInput from '../../../components/FormsInput';
+import SwitchButton from '../../../components/SwitchButton';
 
 interface ExpenseForm {
   type: 'hard' | 'soft';
@@ -264,22 +267,31 @@ const NewExpense = () => {
         {renderReceipt()}
         <View style={styles.separator} />
 
-        {renderMatter()}
-        <View style={styles.separator} />
+        <FormsDropdown
+          label={'Select Matter'}
+          title={'Matter'}
+          required={true}
+        />
 
-        {renderCategory()}
-        <View style={styles.separator} />
+        <FormsDropdown
+          label={'Explense Category'}
+          title={'Select expense category'}
+          required={true}
+        />
 
-        {renderRateQuantityAmount()}
-        <View style={styles.separator} />
-
-        {renderDescription()}
-        <View style={styles.separator} />
-
-        {renderDate()}
-        <View style={styles.separator} />
-
-        {renderFirmUser()}
+        <FormsInput label={'Amount'} placeholder={'0.00'} />
+        <FormsInput label={'Description'} placeholder={'Enter description'} />
+        <FormsInput
+          label={'Reference number'}
+          placeholder={'Enter description'}
+        />
+        <FormsDropdown label={'Date'} title={'Today, Aug 25'} />
+        <FormsDropdown label={'Vendors'} title={'Select vendor'} />
+        <FormsDropdown label={'Firm user'} title={'paul walker'} />
+        <SwitchButton
+          label="Non-Billable"
+          description="Excludes this expense from billable amounts"
+        />
       </ScrollView>
 
       <PopupWrapper ref={documentPickerRef}>

@@ -10,6 +10,8 @@ import AddNote from '../screens/homescreens/createScreens/AddNote';
 import AddEvent from '../screens/homescreens/createScreens/AddEvent';
 import AddTask from '../screens/homescreens/createScreens/AddTask';
 import AddLogs from '../screens/homescreens/createScreens/AddLogs';
+import AddMessage from '../screens/homescreens/createScreens/AddMessage';
+import AddMatter from '../screens/homescreens/createScreens/AddMatter';
 
 const MainStack = createNativeStackNavigator();
 
@@ -24,6 +26,8 @@ export default function AppNavigator() {
         <MainStack.Screen name="AddEvent" component={AddEvent} />
         <MainStack.Screen name="AddTask" component={AddTask} />
         <MainStack.Screen name="AddLogs" component={AddLogs} />
+        <MainStack.Screen name="AddMessages" component={AddMessage} />
+        <MainStack.Screen name="AddMatter" component={AddMatter} />
       </MainStack.Navigator>
     </NavigationContainer>
   );

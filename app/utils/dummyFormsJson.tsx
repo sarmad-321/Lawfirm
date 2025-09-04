@@ -105,17 +105,7 @@ export const eventFormJson = [
   },
 ];
 
-export const LogsFormJson = [
-  {
-    key: 'logstype',
-    label: 'Log type',
-    type: 'status',
-    value: '',
-    options: [
-      { label: 'Phone log', value: 'phone' },
-      { label: 'Email', value: 'email' },
-    ],
-  },
+export const emailLogsFormJson = [
   {
     key: 'from',
     label: 'Sent From',
@@ -123,6 +113,38 @@ export const LogsFormJson = [
     value: 'Select senders',
   },
   { key: 'to', label: 'Sent to', type: 'dropdown', value: 'Select recipients' },
+
+  {
+    key: 'contact',
+    label: 'Subject',
+    type: 'input',
+    value: '',
+    placeholder: 'Enter subject',
+  },
+  {
+    key: 'body',
+    label: 'What was the call about?',
+    type: 'input',
+    value: '',
+    placeholder: 'Enter body',
+  },
+  { key: 'matter', label: 'Matter', type: 'dropdown', value: 'Select matter' },
+  {
+    key: 'date',
+    label: 'Date and time',
+    type: 'dropdown',
+    value: 'Today, Aug 27',
+  },
+];
+
+export const phoneLogsFormJson = [
+  {
+    key: 'from',
+    label: 'Call From',
+    type: 'dropdown',
+    value: 'Select Callers',
+  },
+  { key: 'to', label: 'Call to', type: 'dropdown', value: 'Select recipients' },
 
   {
     key: 'contact',
@@ -144,5 +166,27 @@ export const LogsFormJson = [
     label: 'Date and time',
     type: 'dropdown',
     value: 'Today, Aug 27',
+  },
+];
+
+export const messageFormJson = [
+  { key: 'matter', label: 'Matter', type: 'dropdown', value: 'Select matter' },
+  { key: 'to', label: 'Send to', type: 'dropdown', value: 'soft tech' },
+
+  {
+    key: 'subject',
+    label: 'Message subject',
+    type: 'input',
+    value: '',
+    placeholder: 'Enter subject',
+    required: true,
+  },
+  {
+    key: 'body',
+    label: 'Message',
+    type: 'input',
+    value: '',
+    placeholder: 'Enter Message',
+    required: true,
   },
 ];

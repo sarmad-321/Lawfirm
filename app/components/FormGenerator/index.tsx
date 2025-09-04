@@ -21,7 +21,7 @@ const FormGenerator = ({ fields, onChange }) => {
               key={field.key}
               placeholder={`Enter ${field.label}`}
               label={field.label}
-              required={true}
+              required={field.required}
               value={field.value}
               onChange={val => handleFieldChange(field.key, val)}
             />
@@ -33,6 +33,7 @@ const FormGenerator = ({ fields, onChange }) => {
             <FormsDropdown
               key={field.key}
               title={field.label}
+              required={field.required}
               label={field.value || `Select ${field.label}`}
               onSelect={val => handleFieldChange(field.key, val)}
             />

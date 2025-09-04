@@ -19,7 +19,7 @@ const FormsInput = ({ label, required, placeholder, onChange }) => {
         style={styles.textInput}
         placeholderTextColor={colors.textTertiary}
         placeholder={placeholder}
-        onChange={onChange}
+        onChangeText={onChange}
       />
     </View>
   );

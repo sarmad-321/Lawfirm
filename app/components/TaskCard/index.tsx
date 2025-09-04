@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 8,
+    // backgroundColor: colors.backgroundLight,
   },
   avatar: {
     width: 36,

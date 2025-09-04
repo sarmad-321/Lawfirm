@@ -7,7 +7,7 @@ interface SwitchRowProps {
   value: boolean;
   onValueChange: (value: boolean) => void;
   disabled?: boolean;
-  description: string;
+  description?: string;
   trackColor?: {
     false: string;
     true: string;

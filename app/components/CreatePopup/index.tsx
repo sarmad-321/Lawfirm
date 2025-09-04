@@ -41,6 +41,13 @@ const actions = [
   { key: 'comm', icon: 'call-outline', title: 'Comm logs', color: '#EF4444' },
   { key: 'notes', icon: 'mail-outline', title: 'Notes', color: '#F59E0B' },
   {
+    key: 'message',
+    icon: 'chatbubble-ellipses-outline',
+    title: 'Messages',
+    color: '#22C55E',
+  },
+
+  {
     key: 'edit',
     icon: 'pencil-outline',
     title: 'Edit',
@@ -77,6 +84,14 @@ const CreatePopup = () => {
     }
     if (key === 'comm') {
       navigation.navigate('AddLogs');
+      return;
+    }
+    if (key === 'message') {
+      navigation.navigate('AddMessages');
+      return;
+    }
+    if (key === 'matter') {
+      navigation.navigate('AddMatter');
       return;
     }
     // handle other keys when wired up

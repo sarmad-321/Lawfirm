@@ -9,7 +9,7 @@ import {
 import { colors } from '../../utils/theme';
 
 const StatusSelector = ({ title, options, onChange }) => {
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState(options[0]?.value || null);
 
   const handlePress = value => {
     setSelected(value);
