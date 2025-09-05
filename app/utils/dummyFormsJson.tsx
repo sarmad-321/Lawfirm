@@ -295,3 +295,18 @@ export const matterOptionsForm = [
     value: 'All practice areas',
   },
 ]
+
+export const contactOptionsForm = [
+  {
+    key: 'type',
+    label: 'Contact type',
+    type: 'status',
+    value: 'all',
+    options: [
+      { label: 'All', value: 'all' },
+      { label: 'Client', value: 'client' },
+      { label: 'Vendor', value: 'vendor' },
+      { label: 'Other', value: 'other' },
+    ],
+  },
+]
