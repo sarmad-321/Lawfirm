@@ -21,6 +21,7 @@ import PopupWrapper, {
   PopupWrapperRef,
 } from '../../../components/PopupWrapper';
 import CreatePopup from '../../../components/CreatePopup';
+import MatterFilter from '../../../components/MatterFilters';
 
 interface Matter {
   id: string;
@@ -42,6 +43,7 @@ const HomeScreen: React.FC = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [hasData, setHasData] = useState(false);
   const createPopupRef = React.useRef<PopupWrapperRef>(null);
+  const filterPopupRef = React.useRef<PopupWrapperRef>(null);
   // Sample data - replace with your actual data
   const [matters] = useState<Matter[]>([
     {
@@ -97,6 +99,8 @@ const HomeScreen: React.FC = ({ navigation }) => {
 
   const handleFilterMatters = () => {
     console.log('Filter matters pressed');
+    filterPopupRef.current?.show()
+
   };
 
   const renderMatterItem = (matter: Matter) => (
@@ -152,6 +156,9 @@ const HomeScreen: React.FC = ({ navigation }) => {
     return (
       <ScrollView style={styles.scrollContainer}>
         {/* Search Bar */}
+        <PopupWrapper>
+          <MatterFilter />
+        </PopupWrapper>
         <View style={styles.searchContainer}>
           <Icon
             name="search-outline"
@@ -295,8 +302,8 @@ const HomeScreen: React.FC = ({ navigation }) => {
       >
         <Icon name="add" size={28} color={colors.textPrimary} />
       </TouchableOpacity>
-      <PopupWrapper ref={createPopupRef}>
-        <CreatePopup />
+      <PopupWrapper ref={filterPopupRef}>
+        <MatterFilter />
       </PopupWrapper>
     </SafeAreaView>
   );

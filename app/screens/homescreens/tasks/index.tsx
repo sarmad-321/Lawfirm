@@ -10,6 +10,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { borderRadius, colors, fontSize, spacing } from '../../../utils/theme';
 import HeaderV2 from '../../../components/headerv2';
 import { useNavigation } from '@react-navigation/native';
+import PopupWrapper, { PopupWrapperRef } from '../../../components/PopupWrapper';
+import TaskFilterPopup from '../../../components/TaskFilterPopup';
 
 interface Task {
   id: string;
@@ -35,6 +37,7 @@ const TaskScreen = () => {
   >('upcoming');
   const [tasks, setTasks] = useState<Task[]>([]);
   const horizontalFilterRef = useRef(null);
+  const filterPopupRef = useRef<PopupWrapperRef>(null);
   const navigation = useNavigation();
   // Dummy data to load when FAB is pressed
   const dummyTasks: Task[] = [
@@ -248,6 +251,7 @@ const TaskScreen = () => {
           </TouchableOpacity>
         </View>
       </View>
+
     </TouchableOpacity>
   );
 
@@ -258,8 +262,8 @@ const TaskScreen = () => {
           selectedFilter === 'upcoming'
             ? 'time-outline'
             : selectedFilter === 'overdue'
-            ? 'alert-circle-outline'
-            : 'document-text-outline'
+              ? 'alert-circle-outline'
+              : 'document-text-outline'
         }
         size={64}
         color={colors.textSecondary}
@@ -268,8 +272,8 @@ const TaskScreen = () => {
         {selectedFilter === 'upcoming'
           ? 'No upcoming tasks'
           : selectedFilter === 'overdue'
-          ? 'No overdue tasks'
-          : 'No tasks without due date'}
+            ? 'No overdue tasks'
+            : 'No tasks without due date'}
       </Text>
       <Text style={styles.emptyStateSubtitle}>
         {tasks.length === 0
@@ -282,7 +286,7 @@ const TaskScreen = () => {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <HeaderV2 title="Tasks" />
+      <HeaderV2 title="Tasks" handleFilterPress={() => filterPopupRef.current?.show()} />
 
       {/* Horizontal Filter Tabs */}
       <View style={styles.filterContainer}>
@@ -299,7 +303,7 @@ const TaskScreen = () => {
             offset: 120 * index,
             index,
           })}
-          onScrollToIndexFailed={() => {}}
+          onScrollToIndexFailed={() => { }}
         />
       </View>
 
@@ -322,6 +326,11 @@ const TaskScreen = () => {
       <TouchableOpacity style={styles.fab} onPress={handleFabPress}>
         <Icon name="add" size={24} color={colors.white} />
       </TouchableOpacity>
+      <PopupWrapper
+        ref={filterPopupRef}
+      >
+        <TaskFilterPopup />
+      </PopupWrapper>
     </View>
   );
 };

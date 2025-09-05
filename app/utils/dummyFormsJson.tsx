@@ -190,3 +190,108 @@ export const messageFormJson = [
     required: true,
   },
 ];
+
+
+export const taskOptionsForm = [
+  { key: 'by', label: 'Assigned by', type: 'dropdown', value: 'kim john' },
+  { key: 'to', label: 'Assigned to', type: 'dropdown', value: 'sarmad shakeel' },
+  { key: 'matter', label: 'Matter', type: 'dropdown', value: 'Select matter' },
+
+
+  {
+    key: 'subject',
+    label: 'Message subject',
+    type: 'input',
+    value: '',
+    placeholder: 'Enter subject',
+    required: true,
+  },
+  {
+    key: 'body',
+    label: 'Message',
+    type: 'input',
+    value: '',
+    placeholder: 'Enter Message',
+    required: true,
+  },
+  {
+    key: 'status',
+    label: 'Task Status',
+    type: 'dropdown',
+    value: '',
+    options: ['All', 'Pending', 'In Progress', 'Completed'],
+  },
+  {
+    key: 'priorityLevel',
+    label: 'Priority Level',
+    type: 'status',
+    value: '',
+    options: [
+      { label: 'All', value: 'all' },
+      { label: 'High', value: 'high' },
+      { label: 'Normal', value: 'normal' },
+      { label: 'Low', value: 'low' },
+    ],
+  },
+  {
+    key: 'type',
+    label: 'Task type',
+    type: 'status',
+    value: 'All task types',
+    options: [
+      { label: 'All', value: 'all' },
+      { label: 'Pending', value: 'Pending' },
+      { label: 'In Progress', value: 'In Progress' },
+      { label: 'Completed', value: 'Completed' },
+    ],
+  },
+  {
+    key: 'Task viewing permissions',
+    label: 'Priority level',
+    type: 'status',
+    value: '',
+    options: [
+      { label: 'All', value: 'all' },
+      { label: 'Private Only', value: 'private' },
+    ],
+  },
+];
+
+
+export const matterOptionsForm = [
+  {
+    key: 'client',
+    label: 'Client',
+    type: 'dropdown',
+    value: 'All clients',
+  },
+  {
+    key: 'responsibleAttorney',
+    label: 'Responsible Attorney',
+    type: 'dropdown',
+    value: 'All firm users',
+  },
+  {
+    key: 'originatingAttorney',
+    label: 'Originating Attorney',
+    type: 'dropdown',
+    value: 'All firm users',
+  },
+  {
+    key: 'billableStatus',
+    label: 'Billable status',
+    type: 'status',
+    value: 'all',
+    options: [
+      { label: 'All', value: 'all' },
+      { label: 'Billable', value: 'billable' },
+      { label: 'Non-billable', value: 'non-billable' },
+    ],
+  },
+  {
+    key: 'practiceArea',
+    label: 'Practice area',
+    type: 'dropdown',
+    value: 'All practice areas',
+  },
+]
