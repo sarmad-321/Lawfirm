@@ -22,6 +22,7 @@ import PopupWrapper, {
 } from '../../../components/PopupWrapper';
 import CreatePopup from '../../../components/CreatePopup';
 import MatterFilter from '../../../components/MatterFilters';
+import SearchComponent from '../../../components/SearchComponent';
 
 interface Matter {
   id: string;
@@ -159,21 +160,8 @@ const HomeScreen: React.FC = ({ navigation }) => {
         <PopupWrapper>
           <MatterFilter />
         </PopupWrapper>
-        <View style={styles.searchContainer}>
-          <Icon
-            name="search-outline"
-            size={20}
-            color={colors.textSecondary}
-            style={styles.searchIcon}
-          />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search all matters..."
-            placeholderTextColor={colors.textSecondary}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
-        </View>
+
+        <SearchComponent placeholder="Search all matters..." />
 
         {/* Recently Viewed Section */}
         {recentlyViewed.length > 0 && (
@@ -304,6 +292,9 @@ const HomeScreen: React.FC = ({ navigation }) => {
       </TouchableOpacity>
       <PopupWrapper ref={filterPopupRef}>
         <MatterFilter />
+      </PopupWrapper>
+      <PopupWrapper ref={createPopupRef}>
+        <CreatePopup />
       </PopupWrapper>
     </SafeAreaView>
   );

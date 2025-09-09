@@ -296,17 +296,101 @@ export const matterOptionsForm = [
   },
 ]
 
-export const contactOptionsForm = [
+export const contactGeneralDetailsForm = [
+
   {
-    key: 'type',
-    label: 'Contact type',
+    key: 'prefix',
+    label: 'Prefix',
+    type: 'input',
+    value: '',
+    placeholder: 'Ex. Mr, Mrs, Dr...',
+  },
+  {
+    key: 'firstName',
+    label: 'First name',
+    type: 'input',
+    value: '',
+    placeholder: 'Enter first name...',
+    required: true,
+  },
+  {
+    key: 'middleName',
+    label: 'Middle name',
+    type: 'input',
+    value: '',
+    placeholder: 'Enter middle name...',
+  },
+  {
+    key: 'lastName',
+    label: 'Last name',
+    type: 'input',
+    value: '',
+    placeholder: 'Enter last name...',
+    required: true,
+  },
+  {
+    key: 'dob',
+    label: 'Date of birth',
+    type: 'date',
+    value: '',
+    placeholder: 'Select date',
+  },
+  {
+    key: 'company',
+    label: 'Company',
+    type: 'dropdown',
+    value: '',
+    placeholder: 'Select company',
+  },
+  {
+    key: 'title',
+    label: 'Title',
+    type: 'input',
+    value: '',
+    placeholder: 'Enter title...',
+  },
+]
+
+
+export const activityFiltersForm = [
+  {
+    key: 'firmUser',
+    label: 'Firm user',
+    type: 'dropdown',
+    value: 'paul walker',
+  },
+  {
+    key: 'matter',
+    label: 'Matter',
+    type: 'dropdown',
+    value: 'All matters',
+  },
+  {
+    key: 'dateRange',
+    label: 'Date range',
+    type: 'status',
+    value: 'allTime',
+    options: [
+      { label: 'All time', value: 'allTime' },
+      { label: 'Today', value: 'today' },
+      { label: 'This week', value: 'thisWeek' },
+    ],
+  },
+  {
+    key: 'timeEntryCategory',
+    label: 'Time entry category',
+    type: 'dropdown',
+    value: 'All time entry categories',
+  },
+  {
+    key: 'invoiceStatus',
+    label: 'Invoice status',
     type: 'status',
     value: 'all',
     options: [
       { label: 'All', value: 'all' },
-      { label: 'Client', value: 'client' },
-      { label: 'Vendor', value: 'vendor' },
-      { label: 'Other', value: 'other' },
+      { label: 'Billed', value: 'billed' },
+      { label: 'Draft', value: 'draft' },
     ],
   },
-]
+];

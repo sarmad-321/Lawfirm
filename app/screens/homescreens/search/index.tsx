@@ -12,6 +12,8 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { colors, spacing, borderRadius, fontSize } from '../../../utils/theme';
+import Header from '../../../components/header';
+import HeaderV2 from '../../../components/headerv2';
 
 interface RecentMatter {
   id: string;
@@ -127,21 +129,21 @@ const SearchScreen = () => {
 
   const filteredMatters = searchQuery
     ? sampleMatters.filter(
-        matter =>
-          matter.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          matter.description
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase()) ||
-          matter.client.toLowerCase().includes(searchQuery.toLowerCase()),
-      )
+      matter =>
+        matter.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        matter.description
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        matter.client.toLowerCase().includes(searchQuery.toLowerCase()),
+    )
     : [];
 
   const filteredContacts = searchQuery
     ? sampleContacts.filter(
-        contact =>
-          contact.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          contact.email.toLowerCase().includes(searchQuery.toLowerCase()),
-      )
+      contact =>
+        contact.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        contact.email.toLowerCase().includes(searchQuery.toLowerCase()),
+    )
     : [];
 
   const renderStatusBar = () => (
@@ -497,7 +499,7 @@ const SearchScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={colors.primary} />
-
+      <HeaderV2 title='Search' />
       {/* Search Bar */}
       <View style={styles.searchContainer}>
         <View style={styles.searchBar}>

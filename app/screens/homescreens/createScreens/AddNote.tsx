@@ -7,7 +7,6 @@ import {
   Text,
   View,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome6';
 import FormGenerator from '../../../components/FormGenerator';
 import FormsHeader from '../../../components/FormsHeader';
 import FormsHeading from '../../../components/FormsHeading';
@@ -15,6 +14,7 @@ import { PopupWrapperRef } from '../../../components/PopupWrapper';
 import TimeEntryCard from '../../../components/TimeEntryCard';
 import { colors } from '../../../utils/theme';
 import { NoteFormJson } from '../../../utils/dummyFormsJson';
+import FormAddButton from '../../../components/FormAddButton';
 const AddNote = () => {
   const [formFields, setFormFields] = useState(NoteFormJson);
 
@@ -55,12 +55,9 @@ const AddNote = () => {
         <View style={styles.timeEntries}>
           <TimeEntryCard item={timeEntry} />
         </View>
-        <View style={styles.addTimeRow}>
-          <Icon name="circle-plus" color={colors.secondary} />
-          <Text style={[styles.linkText, { marginLeft: 10 }]}>
-            Add time entry
-          </Text>
-        </View>
+        <FormAddButton
+          label={"Add Time Entry"}
+        />
       </ScrollView>
     </SafeAreaView>
   );
