@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Switch } from 'react-native';
 import { colors } from '../../utils/theme';
+import { vh } from '../../utils/units';
 
 interface SwitchRowProps {
   label: string;
@@ -41,7 +42,9 @@ const SwitchButton: React.FC<SwitchRowProps> = ({
         >
           {label}
         </Text>
-        <Text style={[styles.description]}>{description}</Text>
+        {description ? (
+          <Text style={styles.description}>{description}</Text>
+        ) : null}
       </View>
 
       <Switch
@@ -62,18 +65,17 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 16,
     paddingHorizontal: 16,
     borderBottomWidth: 0.5,
     borderBottomColor: colors.textSecondary,
     backgroundColor: colors.backgroundLight,
-    minHeight: 60,
+    minHeight: vh * 6,
+    alignItems: 'center',
+    // minHeight: 60,
   },
   label: {
     color: 'white',
     fontSize: 14,
-    flex: 1,
     marginRight: 16,
   },
   disabledLabel: {

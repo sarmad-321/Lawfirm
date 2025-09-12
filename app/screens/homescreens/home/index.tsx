@@ -80,11 +80,13 @@ const HomeScreen: React.FC = ({ navigation }) => {
   };
 
   const handleNotificationPress = () => {
-    console.log('Notification pressed');
+    // console.log('Notification pressed');
+    navigation.navigate('Notification');
   };
 
   const handleMessagePress = () => {
     console.log('Message pressed');
+    navigation.navigate('Inbox');
   };
 
   const handleAddPress = () => {

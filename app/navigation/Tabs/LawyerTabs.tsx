@@ -27,6 +27,9 @@ import EditMatterTime from '../../screens/homescreens/home/EditMatterTime';
 import EditTimeEntries from '../../screens/homescreens/activities/EditTimeEntries';
 import NewExpense from '../../screens/homescreens/activities/NewExpense';
 import AddDocuments from '../../screens/homescreens/createScreens/AddDocuments';
+import Customization from '../../screens/homescreens/customization';
+import Security from '../../screens/homescreens/settings/Security';
+import EnterPin from '../../screens/homescreens/settings/EnterPin';
 
 const Tab = createBottomTabNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -36,7 +39,7 @@ const HomeStackScreen = () => {
     <HomeStack.Navigator screenOptions={{ headerShown: false }}>
       <HomeStack.Screen name="HomeScreen" component={HomeScreen} />
       <HomeStack.Screen name="MatterDetail" component={MatterDetail} />
-      <HomeStack.Screen name="Settings" component={SettingsScreen} />
+      <HomeStack.Screen name="Settings" component={SettingsStackScreen} />
       <HomeStack.Screen name="MatterActivities" component={Activities} />
       <HomeStack.Screen name="EditMatterTime" component={EditMatterTime} />
       <HomeStack.Screen name="MatterNotes" component={MatterNotes} />
@@ -47,6 +50,20 @@ const HomeStackScreen = () => {
       <HomeStack.Screen name="MatterDocuments" component={MatterDocuments} />
       <HomeStack.Screen name="EditTimeEntries" component={EditTimeEntries} />
       <HomeStack.Screen name="MatterTasks" component={TaskStackScreen} />
+    </HomeStack.Navigator>
+  );
+};
+
+const SettingsStackScreen = () => {
+  return (
+    <HomeStack.Navigator
+      initialRouteName="SettingsScreen"
+      screenOptions={{ headerShown: false }}
+    >
+      <HomeStack.Screen name="SettingsScreen" component={SettingsScreen} />
+      <HomeStack.Screen name="Customization" component={Customization} />
+      <HomeStack.Screen name="Security" component={Security} />
+      <HomeStack.Screen name="EnterPin" component={EnterPin} />
     </HomeStack.Navigator>
   );
 };

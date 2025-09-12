@@ -9,38 +9,31 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { colors, fontSize, spacing } from '../../utils/theme';
+import { vh } from '../../utils/units';
 
 interface HeaderProps {
   title: string;
 }
 
-const HeaderV2: React.FC<HeaderProps> = ({ title }) => {
+const BackHeader: React.FC<HeaderProps> = ({ title }) => {
   const insets = useSafeAreaInsets();
 
   return (
     <>
       <StatusBar barStyle="light-content" backgroundColor={colors.primary} />
       <View style={[styles.header, { paddingTop: insets.top + spacing.md }]}>
-        <Text style={styles.screenTitle}>{title}</Text>
-
-        <View style={styles.headerIcons}>
-          <TouchableOpacity
-            // onPress={handleFilterPress}
-            style={styles.headerIconButton}
-          >
-            <Icon
-              name="calendar-outline"
-              size={24}
-              color={colors.textPrimary}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            // onPress={handleMenuPress}
-            style={styles.headerIconButton}
-          >
-            <Icon name="filter" size={24} color={colors.textPrimary} />
-          </TouchableOpacity>
+        <View
+          style={{
+            width: 25,
+            height: 25,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Icon name="arrow-back" size={20} color={colors.textPrimary} />
         </View>
+        <Text style={styles.screenTitle}>{title}</Text>
+        <View style={{ width: 25, height: 25 }}></View>
       </View>
     </>
   );
@@ -53,6 +46,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: spacing.lg,
+    paddingBottom: vh * 1.5,
   },
   screenTitle: {
     color: colors.textPrimary,
@@ -70,4 +64,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HeaderV2;
+export default BackHeader;
