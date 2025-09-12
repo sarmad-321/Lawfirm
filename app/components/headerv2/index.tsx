@@ -12,9 +12,10 @@ import { colors, fontSize, spacing } from '../../utils/theme';
 
 interface HeaderProps {
   title: string;
+  handleFilterPress?: () => void;
 }
 
-const HeaderV2: React.FC<HeaderProps> = ({ title }) => {
+const HeaderV2: React.FC<HeaderProps> = ({ title, handleFilterPress }) => {
   const insets = useSafeAreaInsets();
 
   return (
@@ -35,7 +36,7 @@ const HeaderV2: React.FC<HeaderProps> = ({ title }) => {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            // onPress={handleMenuPress}
+            onPress={handleFilterPress}
             style={styles.headerIconButton}
           >
             <Icon name="filter" size={24} color={colors.textPrimary} />

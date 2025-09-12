@@ -94,6 +94,10 @@ const CreatePopup = () => {
       navigation.navigate('AddMatter');
       return;
     }
+    if (key === 'contact') {
+      navigation.navigate('AddContact');
+      return;
+    }
     // handle other keys when wired up
   };
 

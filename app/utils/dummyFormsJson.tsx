@@ -190,3 +190,207 @@ export const messageFormJson = [
     required: true,
   },
 ];
+
+
+export const taskOptionsForm = [
+  { key: 'by', label: 'Assigned by', type: 'dropdown', value: 'kim john' },
+  { key: 'to', label: 'Assigned to', type: 'dropdown', value: 'sarmad shakeel' },
+  { key: 'matter', label: 'Matter', type: 'dropdown', value: 'Select matter' },
+
+
+  {
+    key: 'subject',
+    label: 'Message subject',
+    type: 'input',
+    value: '',
+    placeholder: 'Enter subject',
+    required: true,
+  },
+  {
+    key: 'body',
+    label: 'Message',
+    type: 'input',
+    value: '',
+    placeholder: 'Enter Message',
+    required: true,
+  },
+  {
+    key: 'status',
+    label: 'Task Status',
+    type: 'dropdown',
+    value: '',
+    options: ['All', 'Pending', 'In Progress', 'Completed'],
+  },
+  {
+    key: 'priorityLevel',
+    label: 'Priority Level',
+    type: 'status',
+    value: '',
+    options: [
+      { label: 'All', value: 'all' },
+      { label: 'High', value: 'high' },
+      { label: 'Normal', value: 'normal' },
+      { label: 'Low', value: 'low' },
+    ],
+  },
+  {
+    key: 'type',
+    label: 'Task type',
+    type: 'status',
+    value: 'All task types',
+    options: [
+      { label: 'All', value: 'all' },
+      { label: 'Pending', value: 'Pending' },
+      { label: 'In Progress', value: 'In Progress' },
+      { label: 'Completed', value: 'Completed' },
+    ],
+  },
+  {
+    key: 'Task viewing permissions',
+    label: 'Priority level',
+    type: 'status',
+    value: '',
+    options: [
+      { label: 'All', value: 'all' },
+      { label: 'Private Only', value: 'private' },
+    ],
+  },
+];
+
+
+export const matterOptionsForm = [
+  {
+    key: 'client',
+    label: 'Client',
+    type: 'dropdown',
+    value: 'All clients',
+  },
+  {
+    key: 'responsibleAttorney',
+    label: 'Responsible Attorney',
+    type: 'dropdown',
+    value: 'All firm users',
+  },
+  {
+    key: 'originatingAttorney',
+    label: 'Originating Attorney',
+    type: 'dropdown',
+    value: 'All firm users',
+  },
+  {
+    key: 'billableStatus',
+    label: 'Billable status',
+    type: 'status',
+    value: 'all',
+    options: [
+      { label: 'All', value: 'all' },
+      { label: 'Billable', value: 'billable' },
+      { label: 'Non-billable', value: 'non-billable' },
+    ],
+  },
+  {
+    key: 'practiceArea',
+    label: 'Practice area',
+    type: 'dropdown',
+    value: 'All practice areas',
+  },
+]
+
+export const contactGeneralDetailsForm = [
+
+  {
+    key: 'prefix',
+    label: 'Prefix',
+    type: 'input',
+    value: '',
+    placeholder: 'Ex. Mr, Mrs, Dr...',
+  },
+  {
+    key: 'firstName',
+    label: 'First name',
+    type: 'input',
+    value: '',
+    placeholder: 'Enter first name...',
+    required: true,
+  },
+  {
+    key: 'middleName',
+    label: 'Middle name',
+    type: 'input',
+    value: '',
+    placeholder: 'Enter middle name...',
+  },
+  {
+    key: 'lastName',
+    label: 'Last name',
+    type: 'input',
+    value: '',
+    placeholder: 'Enter last name...',
+    required: true,
+  },
+  {
+    key: 'dob',
+    label: 'Date of birth',
+    type: 'date',
+    value: '',
+    placeholder: 'Select date',
+  },
+  {
+    key: 'company',
+    label: 'Company',
+    type: 'dropdown',
+    value: '',
+    placeholder: 'Select company',
+  },
+  {
+    key: 'title',
+    label: 'Title',
+    type: 'input',
+    value: '',
+    placeholder: 'Enter title...',
+  },
+]
+
+
+export const activityFiltersForm = [
+  {
+    key: 'firmUser',
+    label: 'Firm user',
+    type: 'dropdown',
+    value: 'paul walker',
+  },
+  {
+    key: 'matter',
+    label: 'Matter',
+    type: 'dropdown',
+    value: 'All matters',
+  },
+  {
+    key: 'dateRange',
+    label: 'Date range',
+    type: 'status',
+    value: 'allTime',
+    options: [
+      { label: 'All time', value: 'allTime' },
+      { label: 'Today', value: 'today' },
+      { label: 'This week', value: 'thisWeek' },
+    ],
+  },
+  {
+    key: 'timeEntryCategory',
+    label: 'Time entry category',
+    type: 'dropdown',
+    value: 'All time entry categories',
+  },
+  {
+    key: 'invoiceStatus',
+    label: 'Invoice status',
+    type: 'status',
+    value: 'all',
+    options: [
+      { label: 'All', value: 'all' },
+      { label: 'Billed', value: 'billed' },
+      { label: 'Draft', value: 'draft' },
+    ],
+  },
+];

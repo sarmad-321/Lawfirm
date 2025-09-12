@@ -5,8 +5,16 @@ import { colors } from '../../../utils/theme';
 import FormsHeading from '../../../components/FormsHeading';
 import FormsDropdown from '../../../components/FormsDropdown';
 import SwitchButton from '../../../components/SwitchButton';
+import PopupWrapper from '../../../components/PopupWrapper';
+import ContactPopup from '../../../components/ContactPopup';
+import FormsInput from '../../../components/FormsInput';
+import PermissionPopup from '../../../components/PermissionPopup';
+import BillingMethodPopup from '../../../components/BillingMethodPopup';
 
 const AddMatter = () => {
+  const contactPickerRef = React.useRef(null);
+  const permissionPickerRef = React.useRef(null);
+  const billingMethodPickerRef = React.useRef(null);
   return (
     <SafeAreaView style={styles.container}>
       <FormsHeader title="New Matter" />
@@ -16,34 +24,51 @@ const AddMatter = () => {
           title="Client"
           label="Select Client"
           required={true}
-          onPress={() => {}}
+          onPress={() => contactPickerRef.current?.show()}
         />
-        <FormsDropdown
-          title="Matter description"
-          label="Enter Matter description"
+        <FormsInput
+          label="Matter description"
+          placeholder="Enter Matter description"
           required={true}
-          onPress={() => {}}
         />
         <FormsHeading icon={'people'} title="Permissions" />
         <FormsDropdown
           title="Users with access"
           label="Select firm user or group"
           required={true}
-          onPress={() => {}}
+          onPress={() => permissionPickerRef.current?.show()}
         />
         <FormsHeading icon={'card'} title="Billing Preferences" />
         <SwitchButton
           label="This matter is billable"
           value={true}
-          onValueChange={() => {}}
+          onValueChange={() => { }}
         />
         <FormsDropdown
           title="Billing method"
           label="Select billing method"
           required={true}
-          onPress={() => {}}
+          onPress={() => billingMethodPickerRef.current?.show()}
         />
       </ScrollView>
+
+      <PopupWrapper
+        ref={contactPickerRef}
+      >
+        <ContactPopup />
+      </PopupWrapper>
+
+      <PopupWrapper
+        ref={permissionPickerRef}
+      >
+        <PermissionPopup />
+      </PopupWrapper>
+
+      <PopupWrapper
+        ref={billingMethodPickerRef}
+      >
+        <BillingMethodPopup />
+      </PopupWrapper>
     </SafeAreaView>
   );
 };

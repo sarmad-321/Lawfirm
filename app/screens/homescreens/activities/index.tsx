@@ -23,6 +23,8 @@ import {
 import HeaderV2 from '../../../components/headerv2';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import TimeEntryCard from '../../../components/TimeEntryCard';
+import PopupWrapper, { PopupWrapperRef } from '../../../components/PopupWrapper';
+import ActivitiesFilter from './ActivitiesFilter';
 
 const { width: screenWidth } = Dimensions.get('window');
 const SWIPE_THRESHOLD = 80;
@@ -194,7 +196,7 @@ const Activities: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'time' | 'expenses'>('time');
   const [demoShown, setDemoShown] = useState(false);
   const navigation = useNavigation();
-
+  const filterPopupRef = React.useRef<PopupWrapperRef>();
   // Enhanced sample data
   const dailyTotals: DailyTotal[] = [
     {
@@ -309,9 +311,16 @@ const Activities: React.FC = () => {
     </View>
   );
 
+
+  const handleFilterPress = () => {
+    // Open filter popup
+    filterPopupRef.current?.show();
+    console.log('Filter pressed');
+  }
+
   return (
     <SafeAreaView style={styles.container}>
-      <HeaderV2 title="Activities" />
+      <HeaderV2 title="Activities" handleFilterPress={handleFilterPress} />
 
       {/* Tab Navigation */}
       <View style={styles.tabContainer}>
@@ -391,6 +400,12 @@ const Activities: React.FC = () => {
           </View>
         )}
       </ScrollView>
+
+      <PopupWrapper
+        ref={filterPopupRef}
+      >
+        <ActivitiesFilter />
+      </PopupWrapper>
 
       {/* Floating Action Button */}
       <TouchableOpacity
