@@ -23,6 +23,8 @@ import PopupWrapper, {
 import CreatePopup from '../../../components/CreatePopup';
 import MatterFilter from '../../../components/MatterFilters';
 import SearchComponent from '../../../components/SearchComponent';
+import { useSelector } from 'react-redux';
+import moment from 'moment';
 
 interface Matter {
   id: string;
@@ -45,6 +47,8 @@ const HomeScreen: React.FC = ({ navigation }) => {
   const [hasData, setHasData] = useState(false);
   const createPopupRef = React.useRef<PopupWrapperRef>(null);
   const filterPopupRef = React.useRef<PopupWrapperRef>(null);
+  const testMatters = useSelector((state: any) => state.matter.matters);
+  console.log('Matters from Redux:', testMatters);
   // Sample data - replace with your actual data
   const [matters] = useState<Matter[]>([
     {
@@ -102,8 +106,7 @@ const HomeScreen: React.FC = ({ navigation }) => {
 
   const handleFilterMatters = () => {
     console.log('Filter matters pressed');
-    filterPopupRef.current?.show()
-
+    filterPopupRef.current?.show();
   };
 
   const renderMatterItem = (matter: Matter) => (
@@ -112,15 +115,17 @@ const HomeScreen: React.FC = ({ navigation }) => {
       style={styles.matterItem}
       onPress={() => navigation.navigate('MatterDetail', { matter: matter })} // Assuming you have a navigation setup
     >
-      <Text style={styles.matterTitle}>{matter.title}</Text>
-      {matter.description && (
-        <Text style={styles.matterDescription}>{matter.description}</Text>
+      <Text style={styles.matterTitle}>
+        {matter.matterId}-{matter.client?.name?.split(' ')[0]}
+      </Text>
+      {matter.matterDescription && (
+        <Text style={styles.matterDescription}>{matter.matterDescription}</Text>
       )}
       {matter.date && <Text style={styles.matterDate}>{matter.date}</Text>}
-      {matter.author && (
+      {matter.client?.name && (
         <View style={styles.authorContainer}>
           <Icon name="person-outline" size={12} color={colors.textSecondary} />
-          <Text style={styles.authorText}>{matter.author}</Text>
+          <Text style={styles.authorText}>{matter.client?.name}</Text>
         </View>
       )}
     </TouchableOpacity>
@@ -153,8 +158,10 @@ const HomeScreen: React.FC = ({ navigation }) => {
   );
 
   const renderMattersContent = () => {
-    const recentlyViewed = matters.filter(matter => matter.date === 'Today');
-    const recentlyEdited = matters.filter(matter => matter.author);
+    const recentlyViewed = testMatters.filter(
+      matter => matter.date === moment().format('DD/MM/YYYY'),
+    );
+    const recentlyEdited = testMatters;
 
     return (
       <ScrollView style={styles.scrollContainer}>

@@ -23,7 +23,9 @@ import {
 import HeaderV2 from '../../../components/headerv2';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import TimeEntryCard from '../../../components/TimeEntryCard';
-import PopupWrapper, { PopupWrapperRef } from '../../../components/PopupWrapper';
+import PopupWrapper, {
+  PopupWrapperRef,
+} from '../../../components/PopupWrapper';
 import ActivitiesFilter from './ActivitiesFilter';
 
 const { width: screenWidth } = Dimensions.get('window');
@@ -257,6 +259,9 @@ const Activities: React.FC = () => {
     if (activeTab === 'expenses') {
       navigation.navigate('AddNewExpense');
     }
+    if (activeTab == 'time') {
+      navigation.navigate('AddNewTimeEntry');
+    }
   };
 
   const handleDemoComplete = () => {
@@ -311,12 +316,11 @@ const Activities: React.FC = () => {
     </View>
   );
 
-
   const handleFilterPress = () => {
     // Open filter popup
     filterPopupRef.current?.show();
     console.log('Filter pressed');
-  }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -401,9 +405,7 @@ const Activities: React.FC = () => {
         )}
       </ScrollView>
 
-      <PopupWrapper
-        ref={filterPopupRef}
-      >
+      <PopupWrapper ref={filterPopupRef}>
         <ActivitiesFilter />
       </PopupWrapper>
 

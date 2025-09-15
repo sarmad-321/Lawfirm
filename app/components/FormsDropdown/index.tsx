@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { colors } from '../../utils/theme';
 
-const FormsDropdown = ({ title, label, required, onPress }) => {
+const FormsDropdown = ({ title, label, required, onPress, value }) => {
   return (
     <View style={styles.row}>
       <View
@@ -16,7 +16,7 @@ const FormsDropdown = ({ title, label, required, onPress }) => {
         {required ? <Text style={styles.required}>Required</Text> : null}
       </View>
       <TouchableOpacity onPress={onPress}>
-        <Text style={styles.label}>{label}</Text>
+        <Text style={styles.label}>{value || label}</Text>
       </TouchableOpacity>
     </View>
   );

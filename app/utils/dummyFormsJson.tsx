@@ -191,12 +191,15 @@ export const messageFormJson = [
   },
 ];
 
-
 export const taskOptionsForm = [
   { key: 'by', label: 'Assigned by', type: 'dropdown', value: 'kim john' },
-  { key: 'to', label: 'Assigned to', type: 'dropdown', value: 'sarmad shakeel' },
+  {
+    key: 'to',
+    label: 'Assigned to',
+    type: 'dropdown',
+    value: 'sarmad shakeel',
+  },
   { key: 'matter', label: 'Matter', type: 'dropdown', value: 'Select matter' },
-
 
   {
     key: 'subject',
@@ -257,7 +260,6 @@ export const taskOptionsForm = [
   },
 ];
 
-
 export const matterOptionsForm = [
   {
     key: 'client',
@@ -294,10 +296,9 @@ export const matterOptionsForm = [
     type: 'dropdown',
     value: 'All practice areas',
   },
-]
+];
 
 export const contactGeneralDetailsForm = [
-
   {
     key: 'prefix',
     label: 'Prefix',
@@ -349,8 +350,7 @@ export const contactGeneralDetailsForm = [
     value: '',
     placeholder: 'Enter title...',
   },
-]
-
+];
 
 export const activityFiltersForm = [
   {
@@ -392,5 +392,54 @@ export const activityFiltersForm = [
       { label: 'Billed', value: 'billed' },
       { label: 'Draft', value: 'draft' },
     ],
+  },
+];
+
+export const timeEntryForm = [
+  {
+    key: 'duration',
+    label: 'Duration',
+    type: 'input',
+    value: '',
+    placeholder: 'Ex. 1h 12m, 1:12...',
+  },
+  {
+    key: 'matter',
+    label: 'Matter',
+    type: 'dropdown',
+    value: '00001-wick',
+    description: 'Murder case',
+  },
+  {
+    key: 'timeEntryCategory',
+    label: 'Time entry category',
+    type: 'dropdown',
+    value: 'Select time entry category',
+  },
+  {
+    key: 'description',
+    label: 'Description',
+    type: 'input',
+    value: '',
+    placeholder: 'Enter description',
+  },
+  {
+    key: 'date',
+    label: 'Date',
+    type: 'date',
+    value: 'Today, Aug 25',
+  },
+  {
+    key: 'firmUser',
+    label: 'Firm user',
+    type: 'dropdown',
+    value: 'paul walker',
+  },
+  {
+    key: 'rate',
+    label: 'Rate (hourly)',
+    type: 'input',
+    value: '0.00',
+    description: 'Default rate',
   },
 ];

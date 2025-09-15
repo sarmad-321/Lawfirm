@@ -1,30 +1,31 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import SearchComponent from '../SearchComponent'
+import { FlatList, StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import SearchComponent from '../SearchComponent';
 import ListItem from '../ListItem';
 
 let methods = [
-    { name: 'Hourly', id: '1' },
-    { name: 'Flat Fee', id: '2' },
-    { name: 'Retainer', id: '3' },
-    { name: 'Contingency', id: '4' }
+  { name: 'Hourly', id: '1' },
+  { name: 'Flat Fee', id: '2' },
+  { name: 'Retainer', id: '3' },
+  { name: 'Contingency', id: '4' },
 ];
 
+const BillingMethodPopup = ({ onBillSection }) => {
+  return (
+    <View>
+      <SearchComponent placeholder="Search billing methods..." />
 
-const BillingMethodPopup = () => {
-    return (
-        <View>
-            <SearchComponent placeholder="Search billing methods..." />
+      {methods.map((item, index) => (
+        <ListItem
+          key={index}
+          title={item.name}
+          onPress={() => onBillSection(item)}
+        />
+      ))}
+    </View>
+  );
+};
 
-            {
-                methods.map((item, index) => (
-                    <ListItem key={index} title={item.name} />
-                ))
-            }
-        </View>
-    )
-}
+export default BillingMethodPopup;
 
-export default BillingMethodPopup
-
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

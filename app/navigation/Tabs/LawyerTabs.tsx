@@ -30,6 +30,7 @@ import AddDocuments from '../../screens/homescreens/createScreens/AddDocuments';
 import Customization from '../../screens/homescreens/customization';
 import Security from '../../screens/homescreens/settings/Security';
 import EnterPin from '../../screens/homescreens/settings/EnterPin';
+import NewTimeEntry from '../../screens/homescreens/activities/NewTimeEntry';
 
 const Tab = createBottomTabNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -101,6 +102,7 @@ const ActivitiesStackScreen = () => {
       <HomeStack.Screen name="ActivityScreen" component={Activities} />
       <HomeStack.Screen name="EditTimeEntries" component={EditTimeEntries} />
       <HomeStack.Screen name="AddNewExpense" component={NewExpense} />
+      <HomeStack.Screen name="AddNewTimeEntry" component={NewTimeEntry} />
     </HomeStack.Navigator>
   );
 };

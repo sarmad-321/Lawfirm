@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -10,6 +11,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import { colors, spacing, borderRadius, fontSize } from '../../../utils/theme';
 import { useNavigation } from '@react-navigation/native';
+import { vh, vw } from '../../../utils/units';
 
 const RowDivider = () => <View style={styles.divider} />;
 
@@ -168,17 +170,24 @@ const BillsDetails = () => {
           <View style={{ height: spacing.xxl }} />
         </ScrollView>
       ) : (
-        <View style={styles.previewContainer}>
-          <Icon
-            name="document-outline"
-            size={48}
-            color={colors.textSecondary}
-          />
-          <Text style={styles.previewTitle}>Invoice Preview</Text>
-          <Text style={styles.previewSubtitle}>
-            The printable preview will appear here.
-          </Text>
-        </View>
+        <Image
+          source={{
+            uri: 'https://marketplace.canva.com/EAETpJ0lmjg/2/0/566w/canva-fashion-invoice-YfB-WpWKvmM.jpg',
+          }}
+          style={styles.imagePreview}
+        />
+
+        // <View style={styles.previewContainer}>
+        //   <Icon
+        //     name="document-outline"
+        //     size={48}
+        //     color={colors.textSecondary}
+        //   />
+        //   <Text style={styles.previewTitle}>Invoice Preview</Text>
+        //   <Text style={styles.previewSubtitle}>
+        //     The printable preview will appear here.
+        //   </Text>
+        // </View>
       )}
     </SafeAreaView>
   );
@@ -317,5 +326,11 @@ const styles = StyleSheet.create({
   mutedDash: {
     color: colors.textSecondary,
     fontSize: fontSize.md,
+  },
+  imagePreview: {
+    height: vh * 60,
+    width: vw * 100,
+    resizeMode: 'contain',
+    marginTop: spacing.md,
   },
 });
