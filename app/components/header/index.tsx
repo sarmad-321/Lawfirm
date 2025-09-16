@@ -32,11 +32,15 @@ const Header: React.FC<HeaderProps> = ({
           onPress={onSettingsPress}
           activeOpacity={0.7}
         >
-          <Icon name="settings-outline" size={24} color={colors.textPrimary} />
+          <Icon
+            name="settings-outline"
+            size={24}
+            color={colors.backgroundLight}
+          />
         </TouchableOpacity>
 
         <View style={styles.logoContainer}>
-          <Icon name="briefcase" size={20} color={colors.textPrimary} />
+          <Icon name="briefcase" size={20} color={colors.backgroundLight} />
           <Text style={styles.logoText}>Clio</Text>
         </View>
 
@@ -49,7 +53,7 @@ const Header: React.FC<HeaderProps> = ({
             <Icon
               name="notifications-outline"
               size={24}
-              color={colors.textPrimary}
+              color={colors.backgroundLight}
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -57,7 +61,11 @@ const Header: React.FC<HeaderProps> = ({
             onPress={onMessagePress}
             activeOpacity={0.7}
           >
-            <Icon name="mail-outline" size={24} color={colors.textPrimary} />
+            <Icon
+              name="mail-outline"
+              size={24}
+              color={colors.backgroundLight}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -83,7 +91,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   logoText: {
-    color: colors.textPrimary,
+    color: colors.backgroundLight,
     fontSize: fontSize.xl,
     fontWeight: '700',
     marginLeft: spacing.sm,

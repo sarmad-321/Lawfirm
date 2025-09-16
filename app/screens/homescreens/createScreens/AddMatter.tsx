@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux';
 import { addMatter } from '../../../redux/slices/matterSlice';
 import moment from 'moment';
 
-const AddMatter = () => {
+const AddMatter = ({ navigation }) => {
   const contactPickerRef = React.useRef(null);
   const permissionPickerRef = React.useRef(null);
   const billingMethodPickerRef = React.useRef(null);
@@ -47,6 +47,7 @@ const AddMatter = () => {
       date: moment().format('DD/MM/YYYY'),
     };
     dispatch(addMatter(data));
+    navigation.goBack();
   };
 
   return (
@@ -57,7 +58,7 @@ const AddMatter = () => {
         <FormsDropdown
           title="Client"
           label="Select Client"
-          value={contact ? contact.name : ''}
+          value={contact ? contact.generalDetails?.firstName : ''}
           required={true}
           onPress={() => contactPickerRef.current?.show()}
         />

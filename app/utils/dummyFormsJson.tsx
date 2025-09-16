@@ -332,7 +332,7 @@ export const contactGeneralDetailsForm = [
   {
     key: 'dob',
     label: 'Date of birth',
-    type: 'date',
+    type: 'dropdown',
     value: '',
     placeholder: 'Select date',
   },

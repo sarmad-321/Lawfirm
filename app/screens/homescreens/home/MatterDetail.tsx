@@ -286,17 +286,14 @@ const MatterDetailsScreen: React.FC<MatterDetailsScreenProps> = ({ route }) => {
 
   const renderContact = ({ item }: { item: Contact }) => (
     <View style={styles.contactItem}>
-      <View
-        style={[
-          styles.contactAvatar,
-          { backgroundColor: item.backgroundColor },
-        ]}
-      >
-        <Text style={styles.contactInitials}>{item.initials}</Text>
+      <View style={[styles.contactAvatar, { backgroundColor: '#FF6B35' }]}>
+        <Text style={styles.contactInitials}>SS</Text>
       </View>
       <View style={styles.contactInfo}>
-        <Text style={styles.contactRole}>{item.role}</Text>
-        <Text style={styles.contactName}>{item.name}</Text>
+        <Text style={styles.contactRole}>{item.generalDetails?.prefix}</Text>
+        <Text style={styles.contactName}>
+          {item.generalDetails?.firstName} {item.generalDetails?.lastName}
+        </Text>
       </View>
     </View>
   );
@@ -314,10 +311,11 @@ const MatterDetailsScreen: React.FC<MatterDetailsScreenProps> = ({ route }) => {
       </View>
       <View style={styles.matterInfo}>
         <Text style={styles.matterNumber}>
-          {matter?.id ?? ''} - {matter?.title ?? ''}
+          {matter?.matterId ?? ''} -{' '}
+          {matter?.client?.generalDetails?.firstName ?? ''}
         </Text>
         <Text style={styles.matterDescription}>
-          {matter?.description ?? ''}
+          {matter?.matterDescription ?? ''}
         </Text>
       </View>
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
@@ -364,7 +362,7 @@ const MatterDetailsScreen: React.FC<MatterDetailsScreenProps> = ({ route }) => {
           <Text style={styles.sectionTitle}>Contact details</Text>
           <View style={styles.contactsContainer}>
             <FlatList
-              data={contacts}
+              data={[matter?.client]}
               renderItem={renderContact}
               keyExtractor={item => item.id}
               scrollEnabled={false}

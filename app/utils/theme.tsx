@@ -2,9 +2,9 @@
 
 export const colors = {
   // Primary Colors
-  primary: '#1E40AF',
+  primary: '#10124E',
   primaryDark: '#1D4ED8',
-  primaryLight: '#3B82F6',
+  primaryLight: '#4d52ddff',
 
   // Secondary Colors
   secondary: '#10B981',
@@ -12,18 +12,23 @@ export const colors = {
   secondaryLight: '#34D399',
 
   // Background Colors
-  background: '#111827',
-  backgroundDark: '#111827',
-  backgroundLight: '#1E2535',
+  background: 'white',
+  backgroundDark: '#fcfcfcff',
+  backgroundLight: '#ffffffff',
 
   // Surface Colors
-  surface: '#1F2937',
-  surfaceLight: '#374151',
+  surface: '#e4e4e4ff',
+  surfaceLight: '#dbdbdbff',
 
   // Text Colors
-  textPrimary: '#FFFFFF',
-  textSecondary: '#9CA3AF',
-  textTertiary: '#6B7280',
+  // textPrimary: '#FFFFFF',
+  // textSecondary: '#9CA3AF',
+  // textTertiary: '#6B7280',
+
+  // Text Colors
+  textPrimary: '#000000ff',
+  textSecondary: '#cacacaff',
+  textTertiary: '#505050ff',
 
   // Status Colors
   success: '#10B981',
@@ -50,9 +55,9 @@ export const colors = {
   overlay: 'rgba(0, 0, 0, 0.5)',
 
   // Tab Colors
-  tabActive: '#3B82F6',
+  tabActive: '#4d52ddff',
   tabInactive: '#9CA3AF',
-  tabBackground: '#1F2937',
+  tabBackground: '#10124E',
   tabBorder: '#374151',
 
   // FAB Colors

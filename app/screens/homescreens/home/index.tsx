@@ -44,42 +44,14 @@ interface Contact {
 const HomeScreen: React.FC = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState<'matters' | 'contacts'>('matters');
   const [searchQuery, setSearchQuery] = useState('');
-  const [hasData, setHasData] = useState(false);
   const createPopupRef = React.useRef<PopupWrapperRef>(null);
   const filterPopupRef = React.useRef<PopupWrapperRef>(null);
-  const testMatters = useSelector((state: any) => state.matter.matters);
-  console.log('Matters from Redux:', testMatters);
-  // Sample data - replace with your actual data
-  const [matters] = useState<Matter[]>([
-    {
-      id: '00001-Crime report',
-      title: 'Mobile got snatched',
-      description: '',
-      date: 'Today',
-    },
-    {
-      id: '00001-Crime report',
-      title: 'Mobile got snatched',
-      description: '',
-      date: '',
-      author: 'Atta Rabi Mubasshir',
-    },
-    {
-      id: '00002-Rizwan',
-      title: 'Will be fired from job',
-      description: 'Case of murder of a collegue',
-      date: '12/3/2002',
-      author: 'sarmad shakeel',
-    },
-  ]);
+  const matters = useSelector((state: any) => state.matter.matters);
+  const contacts = useSelector((state: any) => state.contact.contacts);
 
-  const [contacts] = useState<Contact[]>([
-    {
-      id: '1',
-      name: 'Atta Rabi Mubasshir',
-      email: 'attaRabi@gmail.com',
-    },
-  ]);
+  console.log('contacts from redux:', matters);
+
+  // Sample data - replace with your actual data
 
   const handleSettingsPress = () => {
     console.log('Settings pressed');
@@ -97,11 +69,7 @@ const HomeScreen: React.FC = ({ navigation }) => {
   };
 
   const handleAddPress = () => {
-    setHasData(true);
-    setTimeout(() => {
-      createPopupRef.current?.show();
-    }, 1500);
-    console.log('Add button pressed');
+    createPopupRef.current?.show();
   };
 
   const handleFilterMatters = () => {
@@ -116,16 +84,19 @@ const HomeScreen: React.FC = ({ navigation }) => {
       onPress={() => navigation.navigate('MatterDetail', { matter: matter })} // Assuming you have a navigation setup
     >
       <Text style={styles.matterTitle}>
-        {matter.matterId}-{matter.client?.name?.split(' ')[0]}
+        {matter.matterId}-{matter.client?.generalDetails?.firstName}
       </Text>
       {matter.matterDescription && (
         <Text style={styles.matterDescription}>{matter.matterDescription}</Text>
       )}
       {matter.date && <Text style={styles.matterDate}>{matter.date}</Text>}
-      {matter.client?.name && (
+      {matter.client?.generalDetails?.firstName && (
         <View style={styles.authorContainer}>
           <Icon name="person-outline" size={12} color={colors.textSecondary} />
-          <Text style={styles.authorText}>{matter.client?.name}</Text>
+          <Text style={styles.authorText}>
+            {matter.client?.generalDetails?.firstName}{' '}
+            {matter.client?.generalDetails?.lastName}
+          </Text>
         </View>
       )}
     </TouchableOpacity>
@@ -133,10 +104,16 @@ const HomeScreen: React.FC = ({ navigation }) => {
 
   const renderContactItem = (contact: Contact) => (
     <TouchableOpacity key={contact.id} style={styles.contactItem}>
-      <Text style={styles.contactName}>{contact.name}</Text>
-      <Text style={styles.contactEmail}>{contact.email}</Text>
+      <Text style={styles.contactName}>
+        {contact.generalDetails?.firstName} {contact.generalDetails?.lastName}
+      </Text>
+      <Text style={styles.contactEmail}>
+        {contact?.emails?.length ? contact.emails[0] : null}
+      </Text>
       {contact.phone && (
-        <Text style={styles.contactPhone}>{contact.phone}</Text>
+        <Text style={styles.contactPhone}>
+          {contact.phones.length ? contact.phones[0] : null}
+        </Text>
       )}
     </TouchableOpacity>
   );
@@ -158,10 +135,10 @@ const HomeScreen: React.FC = ({ navigation }) => {
   );
 
   const renderMattersContent = () => {
-    const recentlyViewed = testMatters.filter(
+    const recentlyViewed = matters.filter(
       matter => matter.date === moment().format('DD/MM/YYYY'),
     );
-    const recentlyEdited = testMatters;
+    const recentlyEdited = matters;
 
     return (
       <ScrollView style={styles.scrollContainer}>
@@ -216,13 +193,31 @@ const HomeScreen: React.FC = ({ navigation }) => {
           />
         </View>
 
-        {hasData ? (
+        {contacts.length ? (
           contacts.map(renderContactItem)
         ) : (
           <View style={styles.emptyContentContainer}>{renderEmptyState()}</View>
         )}
       </ScrollView>
     );
+  };
+
+  const renderDataContent = () => {
+    if (activeTab === 'matters') {
+      if (matters.length > 0) {
+        return renderMattersContent();
+      } else {
+        return renderEmptyState();
+      }
+    }
+    if (activeTab === 'contacts') {
+      if (contacts.length > 0) {
+        return renderContactsContent();
+      } else {
+        return renderEmptyState();
+      }
+    }
+    return null;
   };
 
   return (
@@ -284,11 +279,12 @@ const HomeScreen: React.FC = ({ navigation }) => {
 
       {/* Content Area */}
       <View style={styles.contentContainer}>
-        {hasData
+        {/* {matt
           ? activeTab === 'matters'
             ? renderMattersContent()
             : renderContactsContent()
-          : renderEmptyState()}
+          : renderEmptyState()} */}
+        {renderDataContent()}
       </View>
 
       {/* Floating Action Button */}
@@ -354,7 +350,7 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#2A2A2A',
+    backgroundColor: colors.surfaceLight,
     borderRadius: borderRadius.lg,
     paddingHorizontal: spacing.md,
     marginVertical: spacing.lg,

@@ -13,6 +13,7 @@ import {
 } from 'redux-persist';
 import authReducer from './slices/authSlice';
 import matterReducer from './slices/matterSlice';
+import contactReducer from './slices/contactSlice';
 
 // Define the root state type before using it
 export type RootState = ReturnType<typeof reducers>;
@@ -27,6 +28,7 @@ const persistedConfig: PersistConfig<RootState> = {
 const reducers = combineReducers({
   auth: authReducer,
   matter: matterReducer,
+  contact : contactReducer,
 });
 
 const persistedStore = persistReducer(persistedConfig, reducers);
